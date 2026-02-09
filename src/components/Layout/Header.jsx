@@ -1,4 +1,5 @@
 import { Search } from "lucide-react";
+import Image from "next/image";
 
 const Header = () => {
   const navLinks = [
@@ -16,8 +17,10 @@ const Header = () => {
       {/* Logo Section */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 bg-[#FFD700] rounded-md flex items-center justify-center overflow-hidden border border-pink-200">
-          <img
-            src="/logo-placeholder.png"
+          <Image
+            height={300}
+            width={300}
+            src="/logo.jpeg"
             alt="Logo"
             className="w-full h-full object-cover"
           />
