@@ -2,7 +2,7 @@ import { ArrowRight, BookOpen } from "lucide-react";
 
 const Hero = () => {
   return (
-    <div className="bg-gradient-to-br from-[#fffbeb] to-[#f5e4e9]">
+    <div className="">
       <section className="max-w-7xl mx-auto px-6 pt-16 pb-24 grid lg:grid-cols-2 gap-12 items-center">
         {/* Left Content */}
         <div className="flex flex-col">
