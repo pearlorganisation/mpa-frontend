@@ -3,13 +3,13 @@ import Image from "next/image";
 
 const Header = () => {
   const navLinks = [
-    { name: "Home", href: "#" },
-    { name: "About", href: "#" },
-    { name: "Articles", href: "#" },
-    { name: "Submit", href: "#" },
-    { name: "Editorial Board", href: "#" },
-    { name: "Guidelines", href: "#" },
-    { name: "Contact", href: "#" },
+    { name: "Home", href: "/" },
+    { name: "About", href: "/about" },
+    { name: "Articles", href: "/articles" },
+    { name: "Submit", href: "submit" },
+    { name: "Editorial Board", href: "submit" },
+    { name: "Guidelines", href: "submit" },
+    { name: "Contact", href: "contact" },
   ];
 
   return (
