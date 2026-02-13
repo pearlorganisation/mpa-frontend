@@ -26,7 +26,7 @@ const Submit = () => {
   ];
 
   return (
-    <div className="bg-[#FFFBEB]/30 min-h-screen py-16 px-6 font-sans">
+    <div className="bg-[#FFFBEB]/30 min-h-screen py-16 px-6 font-sans" id="submit">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-16">

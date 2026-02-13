@@ -63,7 +63,7 @@ const Articles = () => {
   });
 
   return (
-    <section className="max-w-7xl mx-auto py-16 px-6 bg-white min-h-screen">
+    <section className="max-w-7xl mx-auto py-16 px-6 bg-white min-h-screen" id="articles">
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="text-5xl font-bold text-[#713F12] mb-4">

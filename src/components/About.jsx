@@ -37,7 +37,7 @@ const About = () => {
   ];
 
   return (
-    <section className="py-20 px-6 bg-white max-w-7xl mx-auto">
+    <section className="py-20 px-6 bg-white max-w-7xl mx-auto" id="about">
       {/* Header Section */}
       <div className="text-center mb-16">
         <h2 className="text-4xl md:text-5xl font-bold text-[#713F12] flex items-center justify-center gap-4 mb-6">
