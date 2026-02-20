@@ -1,8 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { useLoginMutation  } from "../store/apiSlice";
+import { useLoginMutation } from "../store/apiSlice";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mail, Lock, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -14,29 +16,81 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await loginUser({ email, password }).unwrap();
-      localStorage.setItem("token", res.token); // Token save karein
-      alert("Login Success!");
-      router.push("/submit"); // Submit page par redirect karein
+      localStorage.setItem("token", res.token);
+      
+      // Professional Success Toast
+      toast.success("Welcome back! Login successful.", {
+        duration: 4000,
+        style: { borderRadius: '10px', background: '#333', color: '#fff' },
+      });
+
+      router.push("/submit");
     } catch (err) {
-      alert(err.data?.message || "Invalid Credentials");
+      // Professional Error Toast
+      toast.error(err.data?.message || "Invalid credentials. Please try again.");
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#FFFBEB]/30 flex items-center justify-center p-6">
-      <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-emerald-50 w-full max-w-md">
-        <h2 className="text-3xl font-bold text-[#713F12] mb-6 text-center">Researcher Login</h2>
-        <form onSubmit={handleLogin} className="space-y-4">
-          <input type="email" placeholder="Email" className="w-full p-4 rounded-xl border border-[#6EE7B7] outline-none" 
-            onChange={(e) => setEmail(e.target.value)} required />
-          
-          <input type="password" placeholder="Password" className="w-full p-4 rounded-xl border border-[#6EE7B7] outline-none" 
-            onChange={(e) => setPassword(e.target.value)} required />
+    <div className="min-h-screen bg-gradient-to-br from-[#FFFBEB] via-white to-[#ECFDF5] flex items-center justify-center p-4">
+      <Toaster position="top-center" reverseOrder={false} />
+      
+      <div className="bg-white/80 backdrop-blur-lg p-8 rounded-[2.5rem] shadow-2xl border border-white w-full max-w-md">
+        {/* Header Section */}
+        <div className="text-center mb-8">
+          <h2 className="text-4xl font-extrabold text-[#713F12] tracking-tight">Welcome Back</h2>
+          <p className="text-gray-500 mt-2 font-medium">Please enter your details to login</p>
+        </div>
 
-          <button disabled={isLoading} className="w-full bg-[#10B981] text-white py-4 rounded-xl font-bold hover:bg-[#059669] flex items-center justify-center gap-2">
-            {isLoading ? <Loader2 className="animate-spin" /> : "Login"}
+        <form onSubmit={handleLogin} className="space-y-5">
+          {/* Email Field */}
+          <div className="relative group">
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#10B981] transition-colors" size={20} />
+            <input 
+              type="email" 
+              placeholder="Email Address" 
+              className="w-full pl-12 pr-4 py-4 rounded-2xl border border-gray-200 outline-none focus:border-[#10B981] focus:ring-4 focus:ring-emerald-500/10 transition-all bg-gray-50/50" 
+              onChange={(e) => setEmail(e.target.value)} 
+              required 
+            />
+          </div>
+          
+          {/* Password Field */}
+          <div className="relative group">
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#10B981] transition-colors" size={20} />
+            <input 
+              type="password" 
+              placeholder="Password" 
+              className="w-full pl-12 pr-4 py-4 rounded-2xl border border-gray-200 outline-none focus:border-[#10B981] focus:ring-4 focus:ring-emerald-500/10 transition-all bg-gray-50/50" 
+              onChange={(e) => setPassword(e.target.value)} 
+              required 
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <button type="button" className="text-sm font-semibold text-[#10B981] hover:underline">Forgot Password?</button>
+          </div>
+
+          {/* Login Button */}
+          <button 
+            disabled={isLoading} 
+            className="w-full bg-[#10B981] text-white py-4 rounded-2xl font-bold text-lg hover:bg-[#059669] transform transition-all active:scale-95 flex items-center justify-center gap-3 shadow-lg shadow-emerald-200 disabled:opacity-70"
+          >
+            {isLoading ? <Loader2 className="animate-spin" /> : (
+              <>
+                Login <ArrowRight size={20} />
+              </>
+            )}
           </button>
         </form>
+
+        {/* Footer Link */}
+        <p className="mt-8 text-center text-gray-600 font-medium">
+          Don't have an account? 
+          <Link href="/register" className="text-[#10B981] font-bold ml-2 hover:underline tracking-wide">
+            Create Account
+          </Link>
+        </p>
       </div>
     </div>
   );
