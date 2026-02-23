@@ -98,14 +98,14 @@ const Header = () => {
                 {/* Dropdown Menu */}
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-3 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 z-[110] animate-in fade-in slide-in-from-top-2">
-                    <Link 
+                    {/* <Link 
                       href="/submit" 
                       className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700 hover:bg-[#F0FDF4] hover:text-[#22C55E] transition-colors"
                       onClick={() => setIsDropdownOpen(false)}
                     >
                       <LayoutDashboard size={18} />
                       Dashboard
-                    </Link>
+                    </Link> */}
                     <hr className="my-1 border-gray-50" />
                     <button 
                       onClick={handleLogout}
