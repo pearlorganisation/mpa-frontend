@@ -1,5 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
 import {
   Search,
   ChevronLeft,
@@ -101,8 +103,8 @@ const mockArticles = [
     authors: "Author A, Author B",
     affiliations: "Generic University",
     abstract: "Placeholder abstract text to simulate content for different department tabs.",
-    citations: Math.floor(Math.random() * 100),
-    views: Math.floor(Math.random() * 5000),
+    citations: 50 + i,
+    views: 1000 + i * 100,
     doi: `10.1234/mpa.test.${i}`,
     size: "1.0 MB",
     isEditorChoice: false,
@@ -110,6 +112,7 @@ const mockArticles = [
 ];
 
 export default function Articles() {
+  const router = useRouter();
   const [activeView, setActiveView] = useState("home"); // "home" | "detail"
   const [selectedArticle, setSelectedArticle] = useState(null);
 
@@ -126,6 +129,18 @@ export default function Articles() {
     setActiveView("home");
   }, []);
   const handleArticleClick = (article) => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    if (!token) {
+      toast.error("Please login or signup to view this article.", {
+        icon: '🔒',
+        duration: 4000
+      });
+
+      setTimeout(() => {
+        router.push("/register");
+      }, 1500);
+      return;
+    }
     setSelectedArticle(article);
     setTimeout(() => {
       setActiveView("detail");
@@ -148,6 +163,8 @@ export default function Articles() {
         id="articles"
         className="max-w-7xl mx-auto py-10 px-6 bg-white min-h-screen font-sans"
       >
+
+        <Toaster position="top-center" reverseOrder={false} />
 
         {/* Header Section */}
         <div className="text-center mb-12">
@@ -217,7 +234,7 @@ export default function Articles() {
                 key={cat}
                 onClick={() => setActiveTab(cat)}
                 className={`px-5 py-2 rounded-t-lg font-medium transition-all duration-200 ${activeTab === cat
-                  ? "bg-[#10B981] text-white"
+                  ? "bg-[#22C55E] text-white"
                   : "bg-gray-100 text-[#713F12] hover:bg-gray-200"
                   }`}
               >
