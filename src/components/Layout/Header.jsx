@@ -1,5 +1,5 @@
 "use client"
-import { Search, User, LogOut, LayoutDashboard, ChevronDown } from "lucide-react"; 
+import { Search, User, LogOut, LayoutDashboard, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
@@ -12,13 +12,13 @@ const Header = () => {
   const router = useRouter();
 
   const navLinks = [
-    { name: "Home", href: "/#hero" },
-    { name: "About", href: "/#about" },
-    { name: "Articles", href: "/#articles" },
-    { name: "Submit", href: "/#submit" },
-    { name: "EditorialBoard", href: "/#editorial-board" },
-    { name: "Guidelines", href: "/#guidelines" },
-    { name: "Contact", href: "/#contact" },
+    { name: "Home", href: "#hero" },
+    { name: "About", href: "#about" },
+    { name: "Articles", href: "#articles" },
+    { name: "Submit", href: "#submit" },
+    { name: "EditorialBoard", href: "#editorial-board" },
+    { name: "Guidelines", href: "#guidelines" },
+    { name: "Contact", href: "#contact" },
   ];
 
   // Logic to check if user is logged in on mount
@@ -48,7 +48,7 @@ const Header = () => {
   return (
     <header className="w-full bg-white border-b border-gray-200 sticky top-0 z-[100] shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center h-20">
-        
+
         {/* Logo Section */}
         <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
           <div className="relative w-48 h-12 md:w-56 md:h-14">
@@ -56,7 +56,7 @@ const Header = () => {
               src="/newLogo.png"
               alt="MPA Research Logo"
               fill
-              className="object-contain" 
+              className="object-contain"
               priority
             />
           </div>
@@ -69,6 +69,7 @@ const Header = () => {
               <Link
                 key={link.name}
                 href={link.href}
+                scroll={true}
                 className="text-[#854D0E] hover:text-[#22C55E] transition-all duration-300 text-[15px] font-semibold"
               >
                 {link.name}
@@ -85,7 +86,7 @@ const Header = () => {
             {/* Auth Logic: Show Profile Dropdown if logged in, else show Login link */}
             {isLoggedIn ? (
               <div className="relative" ref={dropdownRef}>
-                <button 
+                <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className="flex items-center gap-1 p-1 pr-2 rounded-full border border-gray-200 bg-gray-50 hover:bg-white hover:shadow-md transition-all duration-300"
                 >
@@ -107,7 +108,7 @@ const Header = () => {
                       Dashboard
                     </Link> */}
                     <hr className="my-1 border-gray-50" />
-                    <button 
+                    <button
                       onClick={handleLogout}
                       className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors"
                     >
@@ -119,8 +120,8 @@ const Header = () => {
               </div>
             ) : (
               /* If NOT Logged In */
-              <Link 
-                href="/login" 
+              <Link
+                href="/login"
                 className="flex items-center justify-center p-2 rounded-full border-2 border-transparent hover:border-[#22C55E] bg-[#854D0E]/5 hover:bg-[#22C55E]/10 text-[#854D0E] hover:text-[#22C55E] transition-all duration-300"
                 title="Login"
               >
@@ -132,9 +133,9 @@ const Header = () => {
 
         {/* Mobile View */}
         <div className="lg:hidden flex items-center gap-4">
-           <Link href={isLoggedIn ? "/submit" : "/login"} className="text-[#854D0E]">
-              <User size={24} />
-           </Link>
+          <Link href={isLoggedIn ? "/submit" : "/login"} className="text-[#854D0E]">
+            <User size={24} />
+          </Link>
         </div>
       </div>
     </header>
