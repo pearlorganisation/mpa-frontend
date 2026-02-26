@@ -2,7 +2,7 @@ import { ArrowRight, BookOpen } from "lucide-react";
 
 const Hero = () => {
   return (
-    <section className="w-full bg-[#FDF6ED]" id="hero">
+    <section className="w-full bg-[#FDF6ED] scroll-mt-24" id="hero">
       <div className="max-w-7xl mx-auto px-6 py-24 grid lg:grid-cols-2 gap-16 items-center">
 
         {/* Left Content */}

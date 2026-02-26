@@ -144,7 +144,13 @@ export default function Articles() {
     setSelectedArticle(article);
     setTimeout(() => {
       setActiveView("detail");
-      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      setTimeout(() => {
+        document
+          .getElementById("article-detail")
+          ?.scrollIntoView({ behavior: "smooth" });
+      }, 50);
+
     }, 0);
   };
 
@@ -161,7 +167,7 @@ export default function Articles() {
     return (
       <section
         id="articles"
-        className="max-w-7xl mx-auto py-10 px-6 bg-white min-h-screen font-sans"
+        className="scroll-mt-24 max-w-7xl mx-auto py-10 px-6 bg-white min-h-screen font-sans"
       >
 
         <Toaster position="top-center" reverseOrder={false} />
@@ -279,12 +285,15 @@ export default function Articles() {
   // RENDER: DETAILED ABSTRACT PAGE
   // -----------------------------------------
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 font-sans">
+    <div
+      id="article-detail"
+      className="min-h-screen bg-gray-50 pb-20 font-sans scroll-mt-24"
+    >
       {/* Detail Header Banner */}
-      <div className="bg-[#064E3B] pt-8 pb-12 px-6">
+      <div className="bg-[#22C55E] pt-8 pb-12 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Breadcrumb */}
-          <div className="text-[#6EE7B7] text-sm mb-6 flex items-center gap-2 cursor-pointer" onClick={handleBack}>
+          <div className="text-white text-sm mb-6 flex items-center gap-2 cursor-pointer" onClick={handleBack}>
             <ChevronLeft size={16} /> Back to Home
           </div>
 
@@ -307,7 +316,7 @@ export default function Articles() {
       </div>
 
       {/* Action Bar (Share/Download tools) */}
-      <div className="bg-[#0f766e] border-t border-[#10B981]/30 px-6 py-4 shadow-md sticky top-0 z-20">
+      <div className="bg-[#22C55E] border-t border-[#10B981]/30 px-6 py-4 shadow-md sticky top-0 z-20">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="text-gray-100 text-sm">
             <span className="block md:inline mr-6"><strong>Published:</strong> {selectedArticle.date}</span>

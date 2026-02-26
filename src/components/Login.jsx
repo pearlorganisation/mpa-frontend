@@ -25,6 +25,7 @@ const Login = () => {
       });
 
       window.location.href = "/submit";
+  
     } catch (err) {
       // Professional Error Toast
       toast.error(err.data?.message || "Invalid credentials. Please try again.");

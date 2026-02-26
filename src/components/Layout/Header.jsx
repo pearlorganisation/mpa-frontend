@@ -12,13 +12,13 @@ const Header = () => {
   const router = useRouter();
 
   const navLinks = [
-    { name: "Home", href: "#hero" },
-    { name: "About", href: "#about" },
-    { name: "Articles", href: "#articles" },
-    { name: "Submit", href: "#submit" },
-    { name: "EditorialBoard", href: "#editorial-board" },
-    { name: "Guidelines", href: "#guidelines" },
-    { name: "Contact", href: "#contact" },
+    { name: "Home", href: "/#hero" },
+    { name: "About", href: "/#about" },
+    { name: "Articles", href: "/#articles" },
+    { name: "Submit", href: "/#submit" },
+    { name: "EditorialBoard", href: "/#editorial-board" },
+    { name: "Guidelines", href: "/#guidelines" },
+    { name: "Contact", href: "/#contact" },
   ];
 
   // Logic to check if user is logged in on mount

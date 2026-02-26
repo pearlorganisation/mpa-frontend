@@ -63,7 +63,7 @@ const editorialBoard = [
 
 const EditorialBoard = () => {
   return (
-    <div className="min-h-screen bg-[#FFF9F2] pb-12" id="editorial-board">
+    <div className="min-h-screen bg-[#FFF9F2] pb-12 scroll-mt-24" id="editorial-board">
 
       {/* ✅ Page Content */}
       <section className="max-w-7xl mx-auto px-6 py-18">

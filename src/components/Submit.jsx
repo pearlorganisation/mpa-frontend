@@ -10,7 +10,7 @@ import {
   X,
   FileCheck,
   AlertCircle,
-  Lock // Naya icon add kiya hai
+  Lock 
 } from "lucide-react";
 import { useSubmitManuscriptMutation } from "../store/apiSlice";
 import { useRouter } from "next/navigation";
@@ -32,9 +32,7 @@ const Submit = () => {
 
   const [manuscriptFile, setManuscriptFile] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true); // Loading state check karne ke liye
-
-  // Sirf check karega ki token hai ya nahi, automatic redirect nahi karega
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   useEffect(() => {
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (token) {
@@ -151,7 +149,7 @@ const Submit = () => {
   ];
 
   return (
-    <div className="bg-[#FFFBEB]/40 min-h-screen py-12 px-4 md:px-8 font-sans" id="submit">
+    <div className="bg-[#FFFBEB]/40 min-h-screen py-12 px-4 md:px-8 font-sans scroll-mt-24" id="submit">
       <Toaster position="top-center" reverseOrder={false} />
 
       <div className="max-w-7xl mx-auto">

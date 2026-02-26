@@ -199,7 +199,7 @@ const Contact = () => {
   };
 
   return (
-    <section className="w-full bg-gray-50 py-16 px-6" id="contact">
+    <section className="w-full bg-gray-50 py-16 px-6 scroll-mt-24" id="contact">
       <div className="max-w-7xl mx-auto">
 
         {/* Heading */}

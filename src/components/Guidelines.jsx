@@ -168,7 +168,7 @@ const GuidelinesPage = () => {
   ];
 
   return (
-    <div className="bg-[#fdfcfb] min-h-screen py-20 px-6 font-sans" id="guidelines">
+    <div className="bg-[#fdfcfb] min-h-screen py-20 px-6 font-sans scroll-mt-28" id="guidelines">
       <div className="max-w-7xl mx-auto">
         
         {/* Header */}
