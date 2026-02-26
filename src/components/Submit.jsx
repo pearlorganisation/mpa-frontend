@@ -347,8 +347,9 @@ if (files.ethicalDeclaration) {
         className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all resize-none"
       />
     </div>
+  
   </div>
-
+{/* ghjgjghjgjdfgjggjgf */}
   {/* File Upload Section */}
   <div className="space-y-4">
     <label className="block text-sm font-medium text-emerald-800 ml-1">Manuscript Documents</label>
