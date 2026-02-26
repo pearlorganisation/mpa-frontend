@@ -10,7 +10,7 @@ import {
   X,
   FileCheck,
   AlertCircle,
-  Lock // Naya icon add kiya hai
+  Lock, // Naya icon add kiya hai
 } from "lucide-react";
 import { useSubmitManuscriptMutation } from "../store/apiSlice";
 import { useRouter } from "next/navigation";
@@ -26,17 +26,25 @@ const Submit = () => {
     title: "",
     authors: "",
     email: "",
-    abstract: "Scientific research abstract...",
-    keywords: "Research, MPA, Science",
+    abstract: "",
+    keywords: "",
+    affiliation: "",
   });
 
-  const [manuscriptFile, setManuscriptFile] = useState(null);
+ const [files, setFiles] = useState({
+  manuscriptFile: null,
+  coverLetter: null,
+  figures: null,
+  tables: null,
+  ethicalDeclaration: null,
+});
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true); // Loading state check karne ke liye
 
   // Sirf check karega ki token hai ya nahi, automatic redirect nahi karega
   useEffect(() => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (token) {
       setIsAuthenticated(true);
     } else {
@@ -50,7 +58,7 @@ const Submit = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e, fileType) => {
     const file = e.target.files[0];
     if (!file) return;
 
@@ -70,19 +78,19 @@ const Submit = () => {
       return;
     }
 
-    setManuscriptFile(file);
+    setFiles((prev) => ({ ...prev, [fileType]: file }));
     toast.success("File attached successfully!");
   };
 
-  const removeFile = () => {
-    setManuscriptFile(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
+  const removeFile = (fileType) => {
+    setFiles((prev) => ({ ...prev, [fileType]: null }));
+   
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    if (!manuscriptFile) {
+    if (!files.manuscriptFile) {
       toast.error("Please upload your manuscript file");
       return;
     }
@@ -93,15 +101,34 @@ const Submit = () => {
       const data = new FormData();
       data.append("title", formData.title);
       data.append("abstract", formData.abstract);
-      data.append("keywords", formData.keywords);
+   data.append(
+  "keywords",
+  JSON.stringify(
+    formData.keywords.split(",").map((k) => k.trim())
+  )
+);
 
       const authorsArray = formData.authors.split(",").map((name) => ({
         name: name.trim(),
         email: formData.email,
-        affiliation: "MPA Affiliated",
+        affiliation: formData.affiliation,
       }));
       data.append("authors", JSON.stringify(authorsArray));
-      data.append("manuscriptFile", manuscriptFile);
+     if (files.manuscriptFile) {
+  data.append("manuscriptFile", files.manuscriptFile);
+}
+if (files.coverLetter) {
+  data.append("coverLetter", files.coverLetter);
+}
+if (files.figures) {
+  data.append("figures", files.figures);
+}
+if (files.tables) {
+  data.append("tables", files.tables);
+}
+if (files.ethicalDeclaration) {
+  data.append("ethicalDeclaration", files.ethicalDeclaration);
+}
 
       const res = await submitManuscript(data).unwrap();
 
@@ -116,13 +143,22 @@ const Submit = () => {
         email: "",
         abstract: "",
         keywords: "",
+        affiliation: "",  
       });
-      setManuscriptFile(null);
+     setFiles({
+  manuscriptFile: null,
+  coverLetter: null,
+  figures: null,
+  tables: null,
+  ethicalDeclaration: null,
+});
       if (fileInputRef.current) fileInputRef.current.value = "";
-
     } catch (err) {
       console.error("Submission error:", err);
-      const errorMessage = err.data?.message || err.error || "Failed to submit. Check your connection.";
+      const errorMessage =
+        err.data?.message ||
+        err.error ||
+        "Failed to submit. Check your connection.";
       toast.error(errorMessage, { id: submissionToast });
     }
   };
@@ -151,7 +187,10 @@ const Submit = () => {
   ];
 
   return (
-    <div className="bg-[#FFFBEB]/40 min-h-screen py-12 px-4 md:px-8 font-sans" id="submit">
+    <div
+      className="bg-[#FFFBEB]/40 min-h-screen py-12 px-4 md:px-8 font-sans"
+      id="submit"
+    >
       <Toaster position="top-center" reverseOrder={false} />
 
       <div className="max-w-7xl mx-auto">
@@ -160,8 +199,8 @@ const Submit = () => {
             Submit Your <span className="text-[#10B981]">Manuscript</span>
           </h1>
           <p className="text-[#854D0E] text-lg max-w-2xl mx-auto leading-relaxed opacity-90">
-            Join thousands of researchers publishing their work with MPA Research.
-            High impact, rigorous peer-review, and global reach.
+            Join thousands of researchers publishing their work with MPA
+            Research. High impact, rigorous peer-review, and global reach.
           </p>
         </div>
 
@@ -176,8 +215,12 @@ const Submit = () => {
                 <div className="bg-[#10B981] group-hover:scale-110 transition-transform w-12 h-12 rounded-xl flex items-center justify-center mb-5 text-white shadow-lg shadow-emerald-100">
                   {step.icon}
                 </div>
-                <h3 className="text-xl font-bold text-[#713F12] mb-2">{step.title}</h3>
-                <p className="text-[#854D0E]/80 text-sm leading-relaxed">{step.desc}</p>
+                <h3 className="text-xl font-bold text-[#713F12] mb-2">
+                  {step.title}
+                </h3>
+                <p className="text-[#854D0E]/80 text-sm leading-relaxed">
+                  {step.desc}
+                </p>
               </div>
             ))}
           </div>
@@ -202,9 +245,12 @@ const Submit = () => {
                 <div className="bg-emerald-100 p-4 rounded-full mb-4">
                   <Lock size={40} className="text-[#10B981]" />
                 </div>
-                <h3 className="text-2xl font-bold text-[#713F12] mb-2">Login Required</h3>
+                <h3 className="text-2xl font-bold text-[#713F12] mb-2">
+                  Login Required
+                </h3>
                 <p className="text-[#854D0E] mb-8 max-w-sm">
-                  You must be logged in to submit a manuscript. Please login or create a new account to continue.
+                  You must be logged in to submit a manuscript. Please login or
+                  create a new account to continue.
                 </p>
                 <div className="flex gap-4">
                   <button
@@ -217,111 +263,170 @@ const Submit = () => {
               </div>
             ) : (
               // LOGGED IN USER FORM
-              <form className="space-y-5" onSubmit={handleFormSubmit}>
-                <div className="grid grid-cols-1 gap-5">
-                  <input
-                    type="text"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleInputChange}
-                    placeholder="Full Manuscript Title"
-                    required
-                    className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all"
-                  />
+             <form className="space-y-6" onSubmit={handleFormSubmit}>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+    {/* Title - Full Width */}
+    <div className="md:col-span-2">
+      <label className="block text-sm font-medium text-emerald-800 mb-1.5 ml-1">Manuscript Title</label>
+      <input
+        type="text"
+        name="title"
+        value={formData.title}
+        onChange={handleInputChange}
+        placeholder="Enter the full title of your manuscript"
+        required
+        className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all"
+      />
+    </div>
 
-                  <input
-                    type="text"
-                    name="authors"
-                    value={formData.authors}
-                    onChange={handleInputChange}
-                    placeholder="Authors (e.g. John Doe, Jane Smith)"
-                    required
-                    className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all"
-                  />
+    {/* Authors & Email - Side by Side */}
+    <div>
+      <label className="block text-sm font-medium text-emerald-800 mb-1.5 ml-1">Author(s)</label>
+      <input
+        type="text"
+        name="authors"
+        value={formData.authors}
+        onChange={handleInputChange}
+        placeholder="e.g. John Doe, Jane Smith"
+        required
+        className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all"
+      />
+    </div>
 
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="Corresponding Email Address"
-                    required
-                    className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all"
-                  />
-                </div>
+    <div>
+      <label className="block text-sm font-medium text-emerald-800 mb-1.5 ml-1">Contact Email</label>
+      <input
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleInputChange}
+        placeholder="author@university.edu"
+        required
+        className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all"
+      />
+    </div>
 
-                <div
-                  className={`relative border-2 border-dashed rounded-2xl p-8 transition-all flex flex-col items-center justify-center 
-                    ${manuscriptFile
-                      ? "border-[#10B981] bg-emerald-50"
-                      : "border-emerald-200 bg-emerald-50/20 hover:bg-emerald-50/40"
-                    }`}
-                >
-                  {!manuscriptFile ? (
-                    <>
-                      <input
-                        type="file"
-                        ref={fileInputRef}
-                        className="absolute inset-0 opacity-0 cursor-pointer"
-                        onChange={handleFileChange}
-                        accept=".pdf,.docx,.doc"
-                      />
-                      <div className="bg-white p-4 rounded-full shadow-sm mb-4">
-                        <Upload size={32} className="text-[#10B981]" />
-                      </div>
-                      <p className="text-[#713F12] font-semibold text-center">
-                        Click or drag manuscript here
-                      </p>
-                      <p className="text-xs text-[#854D0E] mt-2">
-                        Accepted formats: PDF, DOCX (Max 10MB)
-                      </p>
-                    </>
-                  ) : (
-                    <div className="flex items-center justify-between w-full bg-white p-4 rounded-xl border border-emerald-100">
-                      <div className="flex items-center gap-4">
-                        <div className="bg-emerald-100 p-2 rounded-lg">
-                          <FileCheck className="text-[#10B981]" size={24} />
-                        </div>
-                        <div className="overflow-hidden">
-                          <p className="text-[#713F12] font-medium truncate max-w-[200px] md:max-w-sm">
-                            {manuscriptFile.name}
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            {(manuscriptFile.size / 1024 / 1024).toFixed(2)} MB
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={removeFile}
-                        className="p-2 hover:bg-red-50 text-red-500 rounded-full transition-colors"
-                      >
-                        <X size={20} />
-                      </button>
-                    </div>
-                  )}
-                </div>
+    {/* Keywords - Full Width */}
+    <div className="md:col-span-2">
+      <label className="block text-sm font-medium text-emerald-800 mb-1.5 ml-1">Keywords</label>
+      <input
+        type="text"
+        name="keywords"
+        value={formData.keywords}
+        onChange={handleInputChange}
+        placeholder="e.g. AI, Machine Learning, Data Science"
+        required
+        className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all"
+      />
+    </div>
 
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className={`w-full py-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-3 shadow-lg 
-                    ${isLoading
-                      ? "bg-emerald-300 cursor-not-allowed text-white"
-                      : "bg-[#10B981] text-white hover:bg-[#059669] hover:shadow-emerald-200 active:scale-[0.98]"
-                    }`}
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="animate-spin" /> Uploading Manuscript...
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle size={20} /> Submit Manuscript
-                    </>
-                  )}
-                </button>
-              </form>
+    {/* Abstract - Changed to Textarea for better UX */}
+    <div className="md:col-span-2">
+      <label className="block text-sm font-medium text-emerald-800 mb-1.5 ml-1">Abstract</label>
+      <textarea
+        name="abstract"
+        value={formData.abstract}
+        onChange={handleInputChange}
+        placeholder="Summarize your research findings..."
+        required
+        rows={4}
+        className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all resize-none"
+      />
+    </div>
+
+    {/* Affiliations */}
+    <div className="md:col-span-2">
+      <label className="block text-sm font-medium text-emerald-800 mb-1.5 ml-1">Author Affiliations</label>
+      <textarea
+        name="affiliation"
+        value={formData.affiliation}
+        onChange={handleInputChange}
+        placeholder="e.g. John Doe - Department of CS, XYZ University, India"
+        required
+        rows={3}
+        className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all resize-none"
+      />
+    </div>
+  </div>
+
+  {/* File Upload Section */}
+  <div className="space-y-4">
+    <label className="block text-sm font-medium text-emerald-800 ml-1">Manuscript Documents</label>
+    
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Dynamic Upload Boxes */}
+      {/* // 1. Update the loop to pass the ID correctly */}
+{[
+  { id: "manuscriptFile", label: "Manuscript", sub: "PDF, DOCX" },
+  { id: "coverLetter", label: "Cover Letter", sub: "PDF, DOCX" },
+  { id: "figures", label: "Figures", sub: "Images/ZIP" },
+  { id: "tables", label: "Tables", sub: "Excel/Word" },
+  { id: "ethicalDeclaration", label: "Ethical Dec.", sub: "PDF" },
+].map((item, index) => (
+  <div
+    key={item.id} // Better to use ID as key
+    className={`relative border-2 border-dashed rounded-2xl p-6 transition-all flex flex-col items-center justify-center text-center
+      ${files[item.id] 
+        ? "border-[#10B981] bg-emerald-50/50" 
+        : "border-emerald-200 bg-emerald-50/20 hover:border-[#10B981] hover:bg-emerald-50/40"
+      }`}
+  >
+    {!files[item.id] ? (
+      <>
+        <input
+          type="file"
+          // We use the event target to reset the value instead of one shared ref
+          className="absolute inset-0 opacity-0 cursor-pointer z-10"
+          onChange={(e) => handleFileChange(e, item.id)} // FIXED: Pass item.id here
+          accept=".pdf,.docx,.doc"
+        />
+        <div className="bg-white p-3 rounded-full shadow-sm mb-3">
+          <Upload size={20} className="text-[#10B981]" />
+        </div>
+        <p className="text-[#713F12] text-sm font-semibold">{item.label}</p>
+        <p className="text-[10px] text-[#854D0E] uppercase tracking-wider mt-1">{item.sub}</p>
+      </>
+    ) : (
+      <div className="flex flex-col items-center w-full">
+        <FileCheck className="text-[#10B981] mb-2" size={24} />
+        <p className="text-[#713F12] text-xs font-medium truncate w-full px-2">
+          {files[item.id].name}
+        </p>
+        <button
+          type="button"
+          onClick={() => removeFile(item.id)}
+          className="mt-2 text-xs text-red-500 hover:underline flex items-center gap-1"
+        >
+          <X size={12} /> Remove
+        </button>
+      </div>
+    )}
+  </div>
+))}
+    </div>
+  </div>
+
+  {/* Submit Button */}
+  <button
+    type="submit"
+    disabled={isLoading}
+    className={`w-full py-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-3 shadow-lg mt-8
+      ${isLoading
+        ? "bg-emerald-300 cursor-not-allowed text-white"
+        : "bg-[#10B981] text-white hover:bg-[#059669] hover:shadow-emerald-200 active:scale-[0.99]"
+      }`}
+  >
+    {isLoading ? (
+      <>
+        <Loader2 className="animate-spin" /> Uploading Manuscript...
+      </>
+    ) : (
+      <>
+        <CheckCircle size={20} /> Submit Manuscript
+      </>
+    )}
+  </button>
+</form>
             )}
           </div>
 
@@ -342,7 +447,8 @@ const Submit = () => {
                     <div className="w-2 h-2 bg-yellow-300 rounded-full"></div>
                   </div>
                   <p className="text-emerald-50 leading-relaxed text-sm">
-                    <strong>Originality:</strong> Submissions must be original work not published elsewhere.
+                    <strong>Originality:</strong> Submissions must be original
+                    work not published elsewhere.
                   </p>
                 </li>
                 <li className="flex gap-4">
@@ -350,7 +456,8 @@ const Submit = () => {
                     <div className="w-2 h-2 bg-yellow-300 rounded-full"></div>
                   </div>
                   <p className="text-emerald-50 leading-relaxed text-sm">
-                    <strong>Format:</strong> Use standard APA format for citations and bibliography.
+                    <strong>Format:</strong> Use standard APA format for
+                    citations and bibliography.
                   </p>
                 </li>
                 <li className="flex gap-4">
@@ -358,7 +465,8 @@ const Submit = () => {
                     <div className="w-2 h-2 bg-yellow-300 rounded-full"></div>
                   </div>
                   <p className="text-emerald-50 leading-relaxed text-sm">
-                    <strong>Blind Review:</strong> Ensure the manuscript file does not contain author identities.
+                    <strong>Blind Review:</strong> Ensure the manuscript file
+                    does not contain author identities.
                   </p>
                 </li>
               </ul>
@@ -367,9 +475,13 @@ const Submit = () => {
             <div className="bg-white p-8 rounded-[2rem] border border-emerald-100 shadow-sm">
               <h4 className="text-[#713F12] font-bold mb-2">Need Help?</h4>
               <p className="text-[#854D0E]/70 text-sm mb-4">
-                Facing issues during submission? Our technical team is here to help.
+                Facing issues during submission? Our technical team is here to
+                help.
               </p>
-              <a href="mailto:support@mparesearch.com" className="text-[#10B981] font-semibold text-sm hover:underline">
+              <a
+                href="mailto:support@mparesearch.com"
+                className="text-[#10B981] font-semibold text-sm hover:underline"
+              >
                 Contact Support →
               </a>
             </div>
