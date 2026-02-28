@@ -86,7 +86,9 @@ const Login = () => {
 
         <button
   onClick={() =>
+    // window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/users/google`
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/users/google`
+
   }
   className="flex items-center justify-center gap-3
   mt-6 w-full
