@@ -84,6 +84,27 @@ const Login = () => {
           </button>
         </form>
 
+        <button
+  onClick={() =>
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/users/google`
+  }
+  className="flex items-center justify-center gap-3
+  mt-6 w-full
+             bg-white text-gray-700 font-medium 
+             px-5 py-2.5 rounded-lg 
+             border border-gray-300 
+             shadow-sm hover:shadow-md 
+             hover:bg-gray-50 
+             transition duration-200"
+>
+  <img
+    src="https://www.svgrepo.com/show/475656/google-color.svg"
+    alt="Google"
+    className="w-5 h-5"
+  />
+  Continue with Google
+</button>
+
         {/* Footer Link */}
         <p className="mt-8 text-center text-gray-600 font-medium">
           Don't have an account?
