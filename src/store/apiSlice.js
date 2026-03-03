@@ -14,7 +14,7 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Manuscript", "User"],
+  tagTypes: ["Manuscript", "User", "Editorial"],
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (credentials) => ({
@@ -41,6 +41,10 @@ export const apiSlice = createApi({
     verifyEmail: builder.query({
       query: (token) => `/users/verify-email/${token}`,
     }),
+    getEditorials: builder.query({
+      query: () => "/website/editorial", 
+      providesTags: ["Editorial"],
+    }),
   }),
 });
 
@@ -49,4 +53,5 @@ export const {
   useRegisterMutation,
   useSubmitManuscriptMutation,
   useVerifyEmailQuery,
+  useGetEditorialsQuery
 } = apiSlice;
