@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useGetEditorialsQuery } from "../store/apiSlice"; 
+import { useGetEditorialsQuery } from "../store/apiSlice";
 import { Linkedin, Mail, ExternalLink } from "lucide-react";
 
 const EditorialBoard = () => {
@@ -8,13 +8,20 @@ const EditorialBoard = () => {
   const { data: response, isLoading, isError } = useGetEditorialsQuery();
 
   // Extract the array of data from the API response
-  const editorials = response?.data ||[];
+  const editorials = response?.data || [];
 
   // 2. Separate Top Leaders and Regular Editors based on the type
   // Fallback: If 'type' is somehow missing but 'bio' exists, we consider them Top Leaders
-  const executiveEditors = editorials.filter(
-    (item) => item.type === "topLeader" || (!item.type && item.bio)
-  );
+  const executiveEditors = editorials
+    .filter((item) => item.type === "topLeader" || (!item.type && item.bio))
+    .sort((a, b) => {
+      const order = {
+        "Chief Editor": 1,
+        "Editor In-Chief": 2,
+      };
+
+      return (order[a.role] || 99) - (order[b.role] || 99);
+    });
 
   // Filter regular editors who have type === "editor"
   const editorialBoard = editorials.filter((item) => item.type === "editor");
@@ -68,15 +75,15 @@ const EditorialBoard = () => {
         {executiveEditors.length > 0 && (
           <div className="space-y-10 mb-20">
             {executiveEditors.map((leader) => (
-              <div 
-                key={leader._id} 
+              <div
+                key={leader._id}
                 className="bg-white rounded-2xl shadow-lg border border-transparent hover:border-[#10B981] transition-all duration-500 overflow-hidden flex flex-col md:flex-row"
               >
                 {/* Profile Image Section */}
                 <div className="md:w-1/4 bg-gray-100 flex items-center justify-center p-10 border-b md:border-b-0 md:border-r border-gray-100">
                   <div className="relative w-64 h-64 md:w-full md:h-80 overflow-hidden rounded-xl shadow-inner border-4 border-white">
-                    <img 
-                      src={leader.image || "https://via.placeholder.com/400x500?text=No+Image"} 
+                    <img
+                      src={leader.image || "https://via.placeholder.com/400x500?text=No+Image"}
                       alt={leader.name}
                       className="w-full h-full object-cover"
                       onError={(e) => { e.target.src = "https://via.placeholder.com/400x500?text=Profile+Image" }}
@@ -94,15 +101,15 @@ const EditorialBoard = () => {
                       {leader.name}
                     </h3>
                   </div>
-                  
+
                   <p className="text-gray-600 leading-relaxed text-sm md:text-base mb-6 text-justify">
                     {leader.bio}
                   </p>
 
                   {/* Buttons & Links */}
                   <div className="flex gap-4">
-                    <a 
-                      href={`mailto:${leader.email}`} 
+                    <a
+                      href={`mailto:${leader.email}`}
                       className="flex items-center gap-2 bg-[#10B981] hover:bg-[#059669] text-white px-6 py-2.5 rounded-lg font-semibold transition-colors shadow-md"
                     >
                       <Mail size={18} /> Contact
@@ -142,11 +149,11 @@ const EditorialBoard = () => {
 
                   <div className="space-y-3 mb-6 text-sm text-gray-600 flex-1">
                     <p>
-                      <span className="font-semibold text-[#8B4513]">Institution:</span><br/>
+                      <span className="font-semibold text-[#8B4513]">Institution:</span><br />
                       {member.institution || "N/A"}
                     </p>
                     <p>
-                      <span className="font-semibold text-[#8B4513]">Interests:</span><br/>
+                      <span className="font-semibold text-[#8B4513]">Interests:</span><br />
                       {member.interests || "N/A"}
                     </p>
                   </div>

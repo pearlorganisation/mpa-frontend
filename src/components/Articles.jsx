@@ -129,18 +129,18 @@ export default function Articles() {
     setActiveView("home");
   }, []);
   const handleArticleClick = (article) => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    if (!token) {
-      toast.error("Please login or signup to view this article.", {
-        icon: '🔒',
-        duration: 4000
-      });
+    // const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    // if (!token) {
+    //   toast.error("Please login or signup to view this article.", {
+    //     icon: '🔒',
+    //     duration: 4000
+    //   });
 
-      setTimeout(() => {
-        router.push("/register");
-      }, 1500);
-      return;
-    }
+    //   setTimeout(() => {
+    //     router.push("/register");
+    //   }, 1500);
+    //   return;
+    // }
     setSelectedArticle(article);
     setTimeout(() => {
       setActiveView("detail");
