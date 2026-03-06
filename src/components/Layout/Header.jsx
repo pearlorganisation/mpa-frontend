@@ -4,12 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const navLinks = [
     { name: "Home", href: "/#hero" },
@@ -40,9 +42,12 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    dispatch(baseApi.util.resetApiState());
+
     setIsLoggedIn(false);
     setIsDropdownOpen(false);
-    router.push("/login"); // Redirect to login after logout
+    router.replace("/login"); // Redirect to login after logout
   };
 
   return (
