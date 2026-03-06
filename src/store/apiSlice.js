@@ -41,6 +41,21 @@ export const apiSlice = createApi({
     verifyEmail: builder.query({
       query: (token) => `/users/verify-email/${token}`,
     }),
+     getMe: builder.query({
+    query: () => ({
+      url: "/users/me",
+      method: "GET",
+    }),
+    providesTags: ["User"],
+  }),
+  getMySubmissions: builder.query({
+  query: () => ({
+    url: "/manuscripts/my-submissions",
+    method: "GET",
+  }),
+  providesTags: ["Manuscript"],
+})
+  
   }),
 });
 
@@ -49,4 +64,6 @@ export const {
   useRegisterMutation,
   useSubmitManuscriptMutation,
   useVerifyEmailQuery,
+   useGetMeQuery,
+    useGetMySubmissionsQuery,
 } = apiSlice;
