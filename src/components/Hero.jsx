@@ -1,13 +1,43 @@
+"use client";
 import { ArrowRight, BookOpen } from "lucide-react";
+import toast from "react-hot-toast";
 
 const Hero = () => {
+  const checkAuthAndRun = (callback) => {
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("token")
+        : null;
+
+    if (!token) {
+      toast.error(
+        "Please login or signup to view article and submit the manuscript",
+        {
+          icon: "🔒",
+          duration: 4000,
+        }
+      );
+      return;
+    }
+
+    callback(); // user logged in → action run
+  };
+  const scrollToSection = (id) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
   return (
     <section className="w-full bg-[#FDF6ED] scroll-mt-24" id="hero">
       <div className="max-w-7xl mx-auto px-6 py-24 grid lg:grid-cols-2 gap-16 items-center">
 
         {/* Left Content */}
         <div className="flex flex-col">
-          
+
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-[#DCFCE7] text-[#166534] px-3 py-1 rounded-full text-sm font-medium w-fit mb-6">
             <BookOpen size={14} className="text-[#22C55E]" />
@@ -33,11 +63,21 @@ const Hero = () => {
 
           {/* Buttons */}
           <div className="flex flex-wrap gap-4 mb-12">
-            <button className="bg-[#22C55E] text-white px-8 py-3 rounded-xl font-semibold flex items-center gap-2 hover:bg-[#16a34a] transition shadow-md">
+            <button
+              onClick={() =>
+                checkAuthAndRun(() => scrollToSection("submit"))
+              }
+              className="bg-[#22C55E] text-white px-8 py-3 rounded-xl font-semibold flex items-center gap-2 hover:bg-[#16a34a] transition shadow-md"
+            >
               Submit Manuscript <ArrowRight size={18} />
             </button>
 
-            <button className="bg-white text-[#713F12] px-8 py-3 rounded-xl font-semibold border border-green-100 hover:bg-green-50 transition shadow-sm">
+            <button
+              onClick={() =>
+                checkAuthAndRun(() => scrollToSection("articles"))
+              }
+              className="bg-white text-[#713F12] px-8 py-3 rounded-xl font-semibold border border-green-100 hover:bg-green-50 transition shadow-sm"
+            >
               Browse Articles
             </button>
           </div>
