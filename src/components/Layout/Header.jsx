@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useGetMeQuery } from "@/store/apiSlice";
+import { useDispatch } from "react-redux";
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -43,7 +44,7 @@ const Header = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    dispatch(baseApi.util.resetApiState());
+   
 
     setIsLoggedIn(false);
     setIsDropdownOpen(false);
