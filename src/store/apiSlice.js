@@ -42,33 +42,44 @@ export const apiSlice = createApi({
       query: (token) => `/users/verify-email/${token}`,
     }),
     getEditorials: builder.query({
-      query: () => "/website/editorial", 
+      query: () => "/website/editorial",
       providesTags: ["Editorial"],
     }),
-     getMe: builder.query({
-    query: () => ({
-      url: "/users/me",
-      method: "GET",
+    getMe: builder.query({
+      query: () => ({
+        url: "/users/me",
+        method: "GET",
+      }),
+      providesTags: ["User"],
     }),
-    providesTags: ["User"],
+    getMySubmissions: builder.query({
+      query: () => ({
+        url: "/manuscripts/my-submissions",
+        method: "GET",
+      }),
+      providesTags: ["Manuscript"],
+    }),
+    getManuscriptById: builder.query({
+      query: (id) => `/manuscripts/${id}`,
+    }),
+    submitRevision: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `/manuscripts/revise/${id}`,
+        method: 'PUT',
+        body: data,
+      }),
+    }),
   }),
-  getMySubmissions: builder.query({
-  query: () => ({
-    url: "/manuscripts/my-submissions",
-    method: "GET",
-  }),
-  providesTags: ["Manuscript"],
-})
-  
-  }),
-});
+  });
 
-export const {
-  useLoginMutation,
-  useRegisterMutation,
-  useSubmitManuscriptMutation,
-  useVerifyEmailQuery,
-  useGetEditorialsQuery,
-   useGetMeQuery,
+  export const {
+    useLoginMutation,
+    useRegisterMutation,
+    useSubmitManuscriptMutation,
+    useVerifyEmailQuery,
+    useGetEditorialsQuery,
+    useGetMeQuery,
     useGetMySubmissionsQuery,
-} = apiSlice;
+    useGetManuscriptByIdQuery,
+    useSubmitRevisionMutation,
+  } = apiSlice;

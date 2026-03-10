@@ -17,7 +17,7 @@ const Login = () => {
     try {
       const res = await loginUser({ email, password }).unwrap();
       localStorage.setItem("token", res.token);
-
+      localStorage.setItem("user", JSON.stringify(res.user));
       // Professional Success Toast
       toast.success("Welcome back! Login successful.", {
         duration: 4000,
@@ -25,7 +25,7 @@ const Login = () => {
       });
 
       window.location.href = "/submit";
-  
+
     } catch (err) {
       // Professional Error Toast
       toast.error(err.data?.message || "Invalid credentials. Please try again.");
@@ -85,12 +85,12 @@ const Login = () => {
         </form>
 
         <button
-  onClick={() =>
-    // window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/users/google`
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/users/google`
+          onClick={() =>
+            // window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/users/google`
+            window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/users/google`
 
-  }
-  className="flex items-center justify-center gap-3
+          }
+          className="flex items-center justify-center gap-3
   mt-6 w-full
              bg-white text-gray-700 font-medium 
              px-5 py-2.5 rounded-lg 
@@ -98,14 +98,14 @@ const Login = () => {
              shadow-sm hover:shadow-md 
              hover:bg-gray-50 
              transition duration-200"
->
-  <img
-    src="https://www.svgrepo.com/show/475656/google-color.svg"
-    alt="Google"
-    className="w-5 h-5"
-  />
-  Continue with Google
-</button>
+        >
+          <img
+            src="https://www.svgrepo.com/show/475656/google-color.svg"
+            alt="Google"
+            className="w-5 h-5"
+          />
+          Continue with Google
+        </button>
 
         {/* Footer Link */}
         <p className="mt-8 text-center text-gray-600 font-medium">
