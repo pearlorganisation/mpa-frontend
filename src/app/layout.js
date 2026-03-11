@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/Layout/Header";
 import Footer from "@/components/Layout/Footer";
 import ReduxProvider from "@/components/Layout/ReduxProvider"; 
+import CookieConsent from "@/components/Layout/CookieConsent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
           <Header />
           {children}
           <Footer />
+          <CookieConsent/>
         </ReduxProvider>
       </body>
     </html>
