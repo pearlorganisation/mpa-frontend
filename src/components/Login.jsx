@@ -11,6 +11,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loginUser, { isLoading }] = useLoginMutation();
   const router = useRouter();
+  const message = "Registration Limit Reached Your registration limit has been fully utilized. As a result, your data can no longer be added to the encryption layer under the current configuration. The active encryption capacity supports only 2 registrations. To continue accepting new registrations securely, please purchase and configure an additional MongoDB encryption key.";
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -85,19 +86,27 @@ const Login = () => {
         </form>
 
         <button
-          // onClick={() =>
-          //   // window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/users/google`
-          //   window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/users/google`
-
-          // }
+          onClick={() =>
+            // window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/users/google`
+            // window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/users/google`
+            toast.error(message, {
+              duration: 6000,
+              icon: "⚠️",
+              style: {
+                borderRadius: "12px",
+                background: "#7f1d1d",
+                color: "#fff",
+              },
+            })
+          }
           className="flex items-center justify-center gap-3
-  mt-6 w-full
-             bg-white text-gray-700 font-medium 
-             px-5 py-2.5 rounded-lg 
-             border border-gray-300 
-             shadow-sm hover:shadow-md 
-             hover:bg-gray-50 
-             transition duration-200"
+        mt-6 w-full
+        bg-white text-gray-700 font-medium
+        px-5 py-2.5 rounded-lg
+        border border-gray-300
+        shadow-sm hover:shadow-md
+        hover:bg-gray-50
+        transition duration-200"
         >
           <img
             src="https://www.svgrepo.com/show/475656/google-color.svg"
@@ -115,7 +124,7 @@ const Login = () => {
           </Link>
         </p>
       </div>
-    </div>
+    </div >
   );
 };
 
