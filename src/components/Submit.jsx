@@ -10,7 +10,7 @@ import {
   X,
   FileCheck,
   AlertCircle,
-  Lock, // Naya icon add kiya hai
+  Lock, 
 } from "lucide-react";
 import { useSubmitManuscriptMutation } from "../store/apiSlice";
 import { useRouter } from "next/navigation";

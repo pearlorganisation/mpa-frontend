@@ -85,11 +85,11 @@ const Login = () => {
         </form>
 
         <button
-          onClick={() =>
-            // window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/users/google`
-            window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/users/google`
+          // onClick={() =>
+          //   // window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/users/google`
+          //   window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/users/google`
 
-          }
+          // }
           className="flex items-center justify-center gap-3
   mt-6 w-full
              bg-white text-gray-700 font-medium 
