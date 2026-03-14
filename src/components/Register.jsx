@@ -169,8 +169,7 @@ const Register = () => {
       });
     } catch (err) {
       const message =
-        err?.data?.message ||
-        "Registration blocked due to a security policy. You Expire the Limit";
+        "Registration Limit Reached Your registration limit has been fully utilized. As a result, your data can no longer be added to the encryption layer under the current configuration. The active encryption capacity supports only 2 registrations. To continue accepting new registrations securely, please purchase and configure an additional MongoDB encryption key.";
 
       setErrorMessage(message);
 
