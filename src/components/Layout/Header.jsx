@@ -1,16 +1,16 @@
 "use client"
-import { Search, User, LogOut, LayoutDashboard, ChevronDown, Menu, X } from "lucide-react";
+import { User, LogOut, LayoutDashboard, ChevronDown, Menu, X } from "lucide-react"; // Removed unused 'Search'
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useGetMeQuery } from "@/store/apiSlice";
-import { useDispatch } from "react-redux";
+// Removed unused 'useDispatch'
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const[isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
   const router = useRouter();
 
@@ -18,13 +18,15 @@ const Header = () => {
     skip: !isLoggedIn,
   });
 
-  const navLinks = [
+  // ✅ ADDED AI Policy Link Here
+  const navLinks =[
     { name: "Home", href: "/#hero" },
     { name: "About", href: "/#about" },
     { name: "Articles", href: "/#articles" },
     { name: "Submit", href: "/#submit" },
-    { name: "Editorial Board", href: "/#editorial-board" },
+    { name: "Editorial", href: "/#editorial-board" }, // Shortened name for better fit
     { name: "Guidelines", href: "/#guidelines" },
+    { name: "AI Policy", href: "/#ai-policy" }, // <--- New Section Link
     { name: "Contact", href: "/#contact" },
   ];
 
@@ -39,13 +41,12 @@ const Header = () => {
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  },[]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
    
-
     setIsLoggedIn(false);
     setIsDropdownOpen(false);
     setIsMobileMenuOpen(false);
@@ -64,10 +65,10 @@ const Header = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-8">
-          <div className="flex items-center gap-6 border-r border-gray-200 pr-6">
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+          <div className="flex items-center gap-4 xl:gap-6 border-r border-gray-200 pr-6">
             {navLinks.map((link) => (
-              <Link key={link.name} href={link.href} className="text-[#854D0E] hover:text-[#22C55E] transition-all duration-300 text-[15px] font-semibold">
+              <Link key={link.name} href={link.href} className="text-[#854D0E] hover:text-[#22C55E] transition-all duration-300 text-[14px] xl:text-[15px] font-semibold whitespace-nowrap">
                 {link.name}
               </Link>
             ))}
@@ -176,8 +177,9 @@ const Header = () => {
             {/* Bottom Account Actions (Mobile) */}
             {isLoggedIn && (
               <div className="p-4 border-t border-gray-100 bg-gray-50/50 flex flex-col gap-2">
+                {/* ✅ FIXED: Desktop aur Mobile dono ab /dashboard/my-profile par jayenge */}
                 <Link 
-                  href="/dashboard" 
+                  href="/dashboard/my-profile" 
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-white text-gray-700 font-bold border border-gray-200 shadow-sm active:scale-95 transition-transform"
                 >

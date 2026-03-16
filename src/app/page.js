@@ -6,6 +6,7 @@ import Submit from "@/components/Submit";
 import EditorialBoard from "@/components/EditorialBoard";
 import Guidelines from "@/components/Guidelines";
 import Contact from "@/components/Contact";
+import AiPolicySection from "@/components/AiPolicySection";
 
 
 const Page = () => {
@@ -17,6 +18,7 @@ const Page = () => {
       <Submit />
       <EditorialBoard />
       <Guidelines />
+      <AiPolicySection/>
       <Contact />
 
 
