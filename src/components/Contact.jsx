@@ -240,10 +240,10 @@ const Contact = () => {
             </div>
             <h3 className="text-xl font-semibold text-amber-900 mb-3">Phone</h3>
             <p className="text-amber-800 font-medium">
-              +1 (555) 123-4567
+            +91-9452292537
             </p>
             <p className="text-amber-800 font-medium mb-3">
-              +1 (555) 123-4568
+              +91-8923580628
             </p>
             <p className="text-sm text-amber-600">
               International calling hours: 9AM–5PM EST
@@ -260,7 +260,7 @@ const Contact = () => {
             </h3>
             <p className="text-amber-800 font-medium">MIT Campus</p>
             <p className="text-amber-800 font-medium mb-3">
-              Cambridge, MA 02139, USA
+              Gaurs City, Greater Noida
             </p>
             <p className="text-sm text-amber-600">
               Physical office location
