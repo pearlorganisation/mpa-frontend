@@ -30,8 +30,8 @@ const About = () => {
   ];
 
   const stats = [
-    { label: "Countries", value: "120+" },
-    { label: "Reviewers", value: "500+" },
+    // { label: "Countries", value: "120+" },
+    // { label: "Reviewers", value: "500+" },
     { label: "Disciplines", value: "25+" },
     { label: "Avg. Review Time", value: "21 days" },
   ];

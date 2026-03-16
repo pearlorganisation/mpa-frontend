@@ -101,22 +101,22 @@ const Hero = () => {
           {/* Stats Section */}
           <div className="grid grid-cols-3 gap-10 border-t border-green-100 pt-8">
             <div>
-              <div className="text-3xl font-bold text-[#22C55E]">5000+</div>
-              <div className="text-sm text-[#854D0E] mt-1 font-medium">
+              <div className="text-base font-bold text-[#22C55E]">5000+</div>
+              <div className="text-xl text-[#854D0E] mt-1 font-medium">
                 Published Articles
               </div>
             </div>
 
             <div>
-              <div className="text-3xl font-bold text-[#22C55E]">98%</div>
-              <div className="text-sm text-[#854D0E] mt-1 font-medium">
+              <div className="text-base font-bold text-[#22C55E]">98%</div>
+              <div className="text-xl text-[#854D0E] mt-1 font-medium">
                 Quality Rate
               </div>
             </div>
 
             <div>
-              <div className="text-3xl font-bold text-[#22C55E]">2.5</div>
-              <div className="text-sm text-[#854D0E] mt-1 font-medium">
+              <div className="text-base font-bold text-[#22C55E]">2.5</div>
+              <div className="text-xl text-[#854D0E] mt-1 font-medium">
                 Impact Factor
               </div>
             </div>
