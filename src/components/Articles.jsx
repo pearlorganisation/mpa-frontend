@@ -21,15 +21,13 @@ import {
 } from "lucide-react";
 
 // --- MOCK DATA ---
-const categories = ["Biology", "Chemistry", "Physics", "Engineering", "Medicine"];
-
-const mockArticles = [
+const mockArticles =[
   {
     id: 1,
-    category: "Biology",
+    discipline: "Biotechnology",
     date: "2026-01-25",
-    title: "Biotechnological advances in RNA interference for mosquito control: Delivery platforms, gene targets, and field prospects (2015–2025)",
-    authors: "Poonam Daswani, Yesh Sharma, Ashwani Kumar",
+    title: "Research and Developement",
+    authors: "Himani, Arjun, Arun",
     affiliations: "Department of Zoology, University of Science, India",
     abstract: "Mosquito-borne diseases continue to be a significant public health threat. This systematic review highlights the recent advances in RNA interference (RNAi) as a novel control method for mosquito populations. By targeting specific genes crucial for development, reproduction, and pathogen transmission, RNAi provides an alternative strategy. We discuss current challenges, delivery methods, effectiveness, and future prospects. The literature reveals that numerous research and field trials are underway...",
     citations: 120,
@@ -40,10 +38,10 @@ const mockArticles = [
   },
   {
     id: 2,
-    category: "Physics",
+    discipline: "Plant Genetics",
     date: "2026-02-10",
-    title: "Cloning the root-specific Asy promoter and genes encoding chitinase 42 kDa into plant expression vectors",
-    authors: "Nguyen Hoang Tue, Tran Gia Cat Tuong, Pham Thi Huyen",
+    title: "Research and Developement",
+    authors: "Arjun, Himani",
     affiliations: "Institute of Biotechnology, Academy of Science",
     abstract: "A detailed methodology on cloning specific promoters to enhance plant resistance against root pathogens. The study demonstrates significant improvements in expression vectors when combined with...",
     citations: 85,
@@ -54,10 +52,10 @@ const mockArticles = [
   },
   {
     id: 3,
-    category: "Biology",
+    discipline: "Agriculture",
     date: "2025-11-20",
-    title: "CRISPR Gene Editing: A new age technology for sustainable agriculture",
-    authors: "Dr. Robert Miller, Dr. Alice Zhang",
+    title: "Research and Developement",
+    authors: "Arun, Himani, Arjun",
     affiliations: "Agricultural Research Center",
     abstract: "Exploring the potential of CRISPR technology to improve crop resilience and nutritional value in changing climates.",
     citations: 412,
@@ -68,10 +66,10 @@ const mockArticles = [
   },
   {
     id: 4,
-    category: "Biology",
+    discipline: "Bioengineering",
     date: "2025-12-05",
-    title: "Microalgal biorefinery: Challenges and strategy in bioprocessing",
-    authors: "Tan Paul Meng, Rauf Harun",
+    title: "Research and Developement",
+    authors: "Himani, Arun",
     affiliations: "Faculty of Engineering",
     abstract: "Comprehensive analysis of microalgae carbohydrates for fine chemicals and biofuel production.",
     citations: 56,
@@ -82,10 +80,10 @@ const mockArticles = [
   },
   {
     id: 5,
-    category: "Medicine",
+    discipline: "Nutrition Science",
     date: "2026-01-15",
-    title: "Bioactive compounds in plant-based functional foods",
-    authors: "Sarah Jenkins, Mark Otto",
+    title: "Research and Developement",
+    authors: "Arjun, Arun",
     affiliations: "School of Nutrition and Health",
     abstract: "Current scenarios and future challenges of functional foods for human health.",
     citations: 234,
@@ -94,15 +92,15 @@ const mockArticles = [
     size: "1.5 MB",
     isEditorChoice: false,
   },
-  // Adding placeholders to fill tabs
+  // Adding placeholders
   ...Array.from({ length: 6 }).map((_, i) => ({
     id: 6 + i,
-    category: categories[i % categories.length],
+    discipline: "Interdisciplinary",
     date: "2026-02-01",
-    title: `Research Article Placeholder ${i + 1} for ${categories[i % categories.length]}`,
-    authors: "Author A, Author B",
+    title: `Emerging Trends and Methodologies in Modern Research Studies - Part ${i + 1}`,
+    authors: "Himani, Arjun, Arun",
     affiliations: "Generic University",
-    abstract: "Placeholder abstract text to simulate content for different department tabs.",
+    abstract: "Placeholder abstract text to simulate content for different research papers and disciplines.",
     citations: 50 + i,
     views: 1000 + i * 100,
     doi: `10.1234/mpa.test.${i}`,
@@ -118,29 +116,18 @@ export default function Articles() {
 
   // States for Home View
   const [editorIdx, setEditorIdx] = useState(0);
-  const [activeTab, setActiveTab] = useState("Biology");
 
   // Data Filtering
   const editorChoices = mockArticles.filter((a) => a.isEditorChoice).slice(0, 2);
-  const currentJournals = mockArticles.filter((a) => a.category === activeTab).slice(0, 3);
-  const mostViewed = [...mockArticles].sort((a, b) => b.views - a.views).slice(0, 5);
+  // Show first 6 articles directly under Current Issue without tab filtering
+  const currentJournals = mockArticles.slice(0, 6);
+  const mostViewed =[...mockArticles].sort((a, b) => b.views - a.views).slice(0, 5);
 
   useEffect(() => {
     setActiveView("home");
-  }, []);
-  const handleArticleClick = (article) => {
-    // const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    // if (!token) {
-    //   toast.error("Please login or signup to view this article.", {
-    //     icon: '🔒',
-    //     duration: 4000
-    //   });
+  },[]);
 
-    //   setTimeout(() => {
-    //     router.push("/register");
-    //   }, 1500);
-    //   return;
-    // }
+  const handleArticleClick = (article) => {
     setSelectedArticle(article);
     setTimeout(() => {
       setActiveView("detail");
@@ -150,7 +137,6 @@ export default function Articles() {
           .getElementById("article-detail")
           ?.scrollIntoView({ behavior: "smooth" });
       }, 50);
-
     }, 0);
   };
 
@@ -169,7 +155,6 @@ export default function Articles() {
         id="articles"
         className="scroll-mt-24 max-w-7xl mx-auto py-10 px-6 bg-white min-h-screen font-sans"
       >
-
         <Toaster position="top-center" reverseOrder={false} />
 
         {/* Header Section */}
@@ -184,7 +169,6 @@ export default function Articles() {
             <h2 className="text-2xl font-bold text-[#713F12] border-b-2 border-[#10B981] pb-2 inline-block">
               Editor's Choice
             </h2>
-            {/* Editor Tool Mockup */}
             <button className="flex items-center gap-2 text-sm text-[#10B981] hover:text-[#059669] font-semibold bg-[#FFFBEB] px-4 py-2 rounded-lg border border-[#FEF3C7]">
               <Edit size={16} /> Choose/Update Journals
             </button>
@@ -224,38 +208,22 @@ export default function Articles() {
           </div>
         </div>
 
-        {/* SECTION 2: CURRENT JOURNALS (Tabs) */}
+        {/* SECTION 2: CURRENT JOURNALS */}
         <div className="mb-16">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-[#713F12] border-b-2 border-[#10B981] pb-2 inline-block">
+          <div className="flex justify-between items-center mb-8 border-b border-gray-200 pb-4">
+            <h2 className="text-2xl font-bold text-[#713F12] border-b-2 border-[#10B981] pb-2 inline-block -mb-[18px]">
               Current Issue
             </h2>
             <button className="text-[#10B981] font-semibold hover:underline">View All</button>
           </div>
 
-          {/* Tabs */}
-          <div className="flex flex-wrap gap-2 mb-8 border-b border-gray-200 pb-4">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveTab(cat)}
-                className={`px-5 py-2 rounded-t-lg font-medium transition-all duration-200 ${activeTab === cat
-                  ? "bg-[#22C55E] text-white"
-                  : "bg-gray-100 text-[#713F12] hover:bg-gray-200"
-                  }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-
-          {/* Top 3 Articles Grid */}
+          {/* Articles Grid (Without Tabs) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {currentJournals.map((article) => (
               <ArticleCard key={article.id} article={article} onClick={() => handleArticleClick(article)} />
             ))}
             {currentJournals.length === 0 && (
-              <div className="col-span-3 text-center py-10 text-[#B45309]">No articles found for this department.</div>
+              <div className="col-span-3 text-center py-10 text-[#B45309]">No articles found.</div>
             )}
           </div>
         </div>
@@ -358,7 +326,7 @@ export default function Articles() {
           <div className="prose max-w-none text-gray-700 leading-relaxed text-lg text-justify space-y-6">
             <p>{selectedArticle.abstract}</p>
             <p>
-              In recent years, {selectedArticle.category.toLowerCase()} research has emphasized sustainable approaches. The data clearly shows that adapting modern frameworks significantly enhances overall efficiency. This study evaluates multiple vectors and control conditions across various testing grounds to ensure reliability.
+              In recent years, {selectedArticle.discipline.toLowerCase()} research has emphasized sustainable approaches. The data clearly shows that adapting modern frameworks significantly enhances overall efficiency. This study evaluates multiple vectors and control conditions across various testing grounds to ensure reliability.
             </p>
             <p>
               <strong>Conclusions:</strong> The implemented protocols yielded a 45% increase in base efficiency, laying the groundwork for future implementations at scale. We recommend further long-term studies to confirm these preliminary findings in diverse ecosystem structures.
@@ -368,7 +336,7 @@ export default function Articles() {
           <div className="mt-10 pt-6 border-t border-gray-100">
             <h4 className="text-[#713F12] font-bold mb-3">Keywords:</h4>
             <div className="flex flex-wrap gap-2">
-              {["Biotechnology", "Review", "Sustainable Methods", selectedArticle.category].map((kw, i) => (
+              {["Research", "Review", "Sustainable Methods", selectedArticle.discipline].map((kw, i) => (
                 <span key={i} className="bg-gray-100 border border-gray-200 text-gray-600 px-3 py-1 rounded-full text-sm">
                   {kw}
                 </span>
@@ -395,8 +363,9 @@ function ArticleCard({ article, onClick }) {
     >
       <div className="w-full h-40 bg-gray-50 flex items-center justify-center border-b border-gray-100 group-hover:bg-[#FFFBEB] transition-colors relative">
         <ImageIcon size={40} className="text-gray-300" />
+        {/* Replaced Category with Discipline */}
         <div className="absolute top-2 right-2 bg-white/90 backdrop-blur text-xs font-bold text-[#10B981] px-2 py-1 rounded shadow-sm">
-          {article.category}
+          {article.discipline}
         </div>
       </div>
       <div className="p-5 flex flex-col flex-1">
@@ -421,8 +390,6 @@ function ArticleToolsDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-
-
   // Close on click outside
   useEffect(() => {
     function handleClickOutside(event) {
@@ -432,7 +399,7 @@ function ArticleToolsDropdown() {
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  },[]);
 
   return (
     <div className="relative" ref={dropdownRef}>

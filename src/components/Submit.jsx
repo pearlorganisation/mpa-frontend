@@ -10,7 +10,7 @@ import {
   X,
   FileCheck,
   AlertCircle,
-  Lock, 
+  Lock,
 } from "lucide-react";
 import { useSubmitManuscriptMutation } from "../store/apiSlice";
 import { useRouter } from "next/navigation";
@@ -24,6 +24,7 @@ const Submit = () => {
   // Form states
   const [formData, setFormData] = useState({
     title: "",
+    discipline: "",
     authors: "",
     email: "",
     abstract: "",
@@ -99,6 +100,7 @@ const Submit = () => {
     try {
       const data = new FormData();
       data.append("title", formData.title);
+      data.append("discipline", formData.discipline);
       data.append("abstract", formData.abstract);
       data.append(
         "keywords",
@@ -141,6 +143,7 @@ const Submit = () => {
 
       setFormData({
         title: "",
+        discipline:"",
         authors: "",
         email: "",
         abstract: "",
@@ -274,6 +277,21 @@ const Submit = () => {
                       value={formData.title}
                       onChange={handleInputChange}
                       placeholder="Enter the full title of your manuscript"
+                      required
+                      className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-emerald-800 mb-1.5 ml-1">
+                      Discipline / Research Area
+                    </label>
+                    <input
+                      type="text"
+                      name="discipline"
+                      value={formData.discipline}
+                      onChange={handleInputChange}
+                      placeholder="e.g. Computer Science, Biology, Physics"
                       required
                       className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all"
                     />

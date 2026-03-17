@@ -7,8 +7,6 @@ import EditorialBoard from "@/components/EditorialBoard";
 import Guidelines from "@/components/Guidelines";
 import Contact from "@/components/Contact";
 import AiPolicySection from "@/components/AiPolicySection";
-
-
 const Page = () => {
   return (
     <div>
@@ -20,9 +18,6 @@ const Page = () => {
       <Guidelines />
       <AiPolicySection/>
       <Contact />
-
-
-
     </div>
   );
 };

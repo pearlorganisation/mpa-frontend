@@ -258,7 +258,6 @@ const Contact = () => {
             <h3 className="text-xl font-semibold text-amber-900 mb-3">
               Address
             </h3>
-            <p className="text-amber-800 font-medium">MIT Campus</p>
             <p className="text-amber-800 font-medium mb-3">
               Gaurs City, Greater Noida
             </p>
