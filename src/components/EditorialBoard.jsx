@@ -177,7 +177,7 @@ const EditorialBoard = () => {
         )}
 
         {/* ✅ Stats Section (Unchanged) */}
-        <div className="mt-20 bg-[#10B981] rounded-2xl p-8 md:p-12 text-white shadow-lg">
+        {/* <div className="mt-20 bg-[#10B981] rounded-2xl p-8 md:p-12 text-white shadow-lg">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-green-400/30">
             <div>
               <div className="text-4xl font-bold mb-2">500+</div>
@@ -192,7 +192,7 @@ const EditorialBoard = () => {
               <div className="text-green-50 font-medium text-sm md:text-base">Countries Represented</div>
             </div>
           </div>
-        </div>
+        </div> */}
       </section>
     </div>
   );
