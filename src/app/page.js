@@ -1,4 +1,3 @@
-// Page.js
 import React from "react";
 import About from "@/components/About";
 import Articles from "@/components/Articles";
