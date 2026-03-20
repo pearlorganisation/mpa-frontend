@@ -11,6 +11,9 @@ import {
   FileCheck,
   AlertCircle,
   Lock,
+  Plus,
+  Trash2,
+  User,
 } from "lucide-react";
 import { useSubmitManuscriptMutation } from "../store/apiSlice";
 import { useRouter } from "next/navigation";
@@ -19,18 +22,20 @@ import toast, { Toaster } from "react-hot-toast";
 const Submit = () => {
   const router = useRouter();
   const fileInputRef = useRef(null);
-  const [submitManuscript, { isLoading }] = useSubmitManuscriptMutation();
+  const[submitManuscript, { isLoading }] = useSubmitManuscriptMutation();
 
-  // Form states
-  const [formData, setFormData] = useState({
+  // Basic Form States
+  const[formData, setFormData] = useState({
     title: "",
     discipline: "",
-    authors: "",
-    email: "",
     abstract: "",
     keywords: "",
-    affiliation: "",
   });
+
+  // Dynamic Authors State (Array of objects for multiple authors)
+  const[authorsList, setAuthorsList] = useState([
+    { name: "", email: "", affiliation: "" },
+  ]);
 
   const [files, setFiles] = useState({
     manuscriptFile: null,
@@ -40,8 +45,10 @@ const Submit = () => {
     ethicalDeclaration: null,
     aiReport: null,
   });
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const[isCheckingAuth, setIsCheckingAuth] = useState(true);
+
   useEffect(() => {
     const token =
       typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -51,18 +58,46 @@ const Submit = () => {
       setIsAuthenticated(false);
     }
     setIsCheckingAuth(false);
-  }, []);
+  },[]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev,[name]: value }));
   };
+
+  // --- Authors Management Logic ---
+  const handleAuthorChange = (index, field, value) => {
+    const updatedAuthors = [...authorsList];
+    updatedAuthors[index][field] = value;
+    setAuthorsList(updatedAuthors);
+  };
+
+  const addAuthor = () => {
+    if (authorsList.length < 15) {
+      setAuthorsList([...authorsList, { name: "", email: "", affiliation: "" }]);
+      // Scroll smoothly to bottom of authors list when a new one is added
+      setTimeout(() => {
+        const container = document.getElementById("authors-container");
+        if (container) container.scrollTop = container.scrollHeight;
+      }, 100);
+    } else {
+      toast.error("You can only add a maximum of 15 authors.");
+    }
+  };
+
+  const removeAuthor = (index) => {
+    if (authorsList.length > 1) {
+      const updatedAuthors = authorsList.filter((_, i) => i !== index);
+      setAuthorsList(updatedAuthors);
+    }
+  };
+  // ---------------------------------
 
   const handleFileChange = (e, fileType) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const allowedTypes = [
+    const allowedTypes =[
       "application/pdf",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       "application/msword",
@@ -78,13 +113,12 @@ const Submit = () => {
       return;
     }
 
-    setFiles((prev) => ({ ...prev, [fileType]: file }));
+    setFiles((prev) => ({ ...prev,[fileType]: file }));
     toast.success("File attached successfully!");
   };
 
   const removeFile = (fileType) => {
     setFiles((prev) => ({ ...prev, [fileType]: null }));
-
   };
 
   const handleFormSubmit = async (e) => {
@@ -93,6 +127,15 @@ const Submit = () => {
     if (!files.manuscriptFile) {
       toast.error("Please upload your manuscript file");
       return;
+    }
+
+    // Validate authors
+    for (let i = 0; i < authorsList.length; i++) {
+      const author = authorsList[i];
+      if (!author.name.trim() || !author.email.trim() || !author.affiliation.trim()) {
+        toast.error(`Please fill all details for Author ${i + 1}`);
+        return;
+      }
     }
 
     const submissionToast = toast.loading("Uploading your research work...");
@@ -104,35 +147,23 @@ const Submit = () => {
       data.append("abstract", formData.abstract);
       data.append(
         "keywords",
-        JSON.stringify(
-          formData.keywords.split(",").map((k) => k.trim())
-        )
+        JSON.stringify(formData.keywords.split(",").map((k) => k.trim()))
       );
 
-      const authorsArray = formData.authors.split(",").map((name) => ({
-        name: name.trim(),
-        email: formData.email,
-        affiliation: formData.affiliation,
+      // Format authors for backend
+      const formattedAuthors = authorsList.map((a) => ({
+        name: a.name.trim(),
+        email: a.email.trim(),
+        affiliation: a.affiliation.trim(),
       }));
-      data.append("authors", JSON.stringify(authorsArray));
-      if (files.manuscriptFile) {
-        data.append("manuscriptFile", files.manuscriptFile);
-      }
-      if (files.coverLetter) {
-        data.append("coverLetter", files.coverLetter);
-      }
-      if (files.figures) {
-        data.append("figures", files.figures);
-      }
-      if (files.tables) {
-        data.append("tables", files.tables);
-      }
-      if (files.ethicalDeclaration) {
-        data.append("ethicalDeclaration", files.ethicalDeclaration);
-      }
-      if (files.aiReport) {
-        data.append("aiReport", files.aiReport);
-      }
+      data.append("authors", JSON.stringify(formattedAuthors));
+
+      if (files.manuscriptFile) data.append("manuscriptFile", files.manuscriptFile);
+      if (files.coverLetter) data.append("coverLetter", files.coverLetter);
+      if (files.figures) data.append("figures", files.figures);
+      if (files.tables) data.append("tables", files.tables);
+      if (files.ethicalDeclaration) data.append("ethicalDeclaration", files.ethicalDeclaration);
+      if (files.aiReport) data.append("aiReport", files.aiReport);
 
       const res = await submitManuscript(data).unwrap();
 
@@ -143,53 +174,28 @@ const Submit = () => {
 
       setFormData({
         title: "",
-        discipline:"",
-        authors: "",
-        email: "",
+        discipline: "",
         abstract: "",
         keywords: "",
-        affiliation: "",
       });
+      setAuthorsList([{ name: "", email: "", affiliation: "" }]);
       setFiles({
-        manuscriptFile: null,
-        coverLetter: null,
-        figures: null,
-        tables: null,
-        ethicalDeclaration: null,
-        aiReport: null,
+        manuscriptFile: null, coverLetter: null, figures: null,
+        tables: null, ethicalDeclaration: null, aiReport: null,
       });
-      if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (err) {
       console.error("Submission error:", err);
       const errorMessage =
-        err.data?.message ||
-        err.error ||
-        "Failed to submit. Check your connection.";
+        err.data?.message || err.error || "Failed to submit. Check your connection.";
       toast.error(errorMessage, { id: submissionToast });
     }
   };
 
-  const steps = [
-    {
-      icon: <Upload size={24} />,
-      title: "Submit Manuscript",
-      desc: "Upload your research paper in PDF or Word format.",
-    },
-    {
-      icon: <FileText size={24} />,
-      title: "Initial Review",
-      desc: "Our editorial team checks for scope and format compliance.",
-    },
-    {
-      icon: <Clock size={24} />,
-      title: "Peer Review",
-      desc: "Your paper is sent to expert reviewers (typically 21 days).",
-    },
-    {
-      icon: <CheckCircle size={24} />,
-      title: "Decision",
-      desc: "Receive acceptance, minor revision, or rejection decision.",
-    },
+  const steps =[
+    { icon: <Upload size={24} />, title: "Submit Manuscript", desc: "Upload your research paper in PDF or Word format." },
+    { icon: <FileText size={24} />, title: "Initial Review", desc: "Our editorial team checks for scope and format compliance." },
+    { icon: <Clock size={24} />, title: "Peer Review", desc: "Your paper is sent to expert reviewers (typically 21 days)." },
+    { icon: <CheckCircle size={24} />, title: "Decision", desc: "Receive acceptance, minor revision, or rejection decision." },
   ];
 
   return (
@@ -218,59 +224,50 @@ const Submit = () => {
                 <div className="bg-[#10B981] group-hover:scale-110 transition-transform w-12 h-12 rounded-xl flex items-center justify-center mb-5 text-white shadow-lg shadow-emerald-100">
                   {step.icon}
                 </div>
-                <h3 className="text-xl font-bold text-[#713F12] mb-2">
-                  {step.title}
-                </h3>
-                <p className="text-[#854D0E]/80 text-sm leading-relaxed">
-                  {step.desc}
-                </p>
+                <h3 className="text-xl font-bold text-[#713F12] mb-2">{step.title}</h3>
+                <p className="text-[#854D0E]/80 text-sm leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-12 gap-10 items-start">
-          {/* Main Form Card */}
+        {/* MAIN GRID CONTENT */}
+        <div className="grid lg:grid-cols-12 gap-10 items-start relative">
+          
+          {/* Main Form Card (Left Side) */}
           <div className="lg:col-span-7 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-xl shadow-emerald-900/5 border border-white">
             <h2 className="text-3xl font-bold text-[#713F12] mb-8 flex items-center gap-3">
               Submission Details
             </h2>
 
-            {/* Check Authentication here instead of full page redirect */}
             {isCheckingAuth ? (
               <div className="flex flex-col items-center justify-center py-12">
                 <Loader2 className="animate-spin text-[#10B981]" size={40} />
                 <p className="text-[#854D0E] mt-4">Checking access...</p>
               </div>
             ) : !isAuthenticated ? (
-              // NON-LOGGED IN USER UI
               <div className="flex flex-col items-center justify-center py-12 text-center bg-emerald-50/50 rounded-2xl border border-emerald-100">
                 <div className="bg-emerald-100 p-4 rounded-full mb-4">
                   <Lock size={40} className="text-[#10B981]" />
                 </div>
-                <h3 className="text-2xl font-bold text-[#713F12] mb-2">
-                  Login Required
-                </h3>
+                <h3 className="text-2xl font-bold text-[#713F12] mb-2">Login Required</h3>
                 <p className="text-[#854D0E] mb-8 max-w-sm">
-                  You must be logged in to submit a manuscript. Please login or
-                  create a new account to continue.
+                  You must be logged in to submit a manuscript. Please login or create a new account to continue.
                 </p>
-                <div className="flex gap-4">
-                  <button
-                    onClick={() => router.push("/register")}
-                    className="px-6 py-3 bg-[#10B981] text-white font-bold rounded-xl hover:bg-[#059669] transition-all shadow-lg shadow-emerald-200"
-                  >
-                    Register / Login
-                  </button>
-                </div>
+                <button
+                  onClick={() => router.push("/register")}
+                  className="px-6 py-3 bg-[#10B981] text-white font-bold rounded-xl hover:bg-[#059669] transition-all shadow-lg shadow-emerald-200"
+                >
+                  Register / Login
+                </button>
               </div>
             ) : (
-              // LOGGED IN USER FORM
               <form className="space-y-6" onSubmit={handleFormSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  {/* Title - Full Width */}
+                  
+                  {/* Title */}
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-emerald-800 mb-1.5 ml-1">Manuscript Title</label>
+                    <label className="block text-sm font-semibold text-emerald-800 mb-1.5 ml-1">Manuscript Title *</label>
                     <input
                       type="text"
                       name="title"
@@ -282,10 +279,9 @@ const Submit = () => {
                     />
                   </div>
 
+                  {/* Discipline */}
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-emerald-800 mb-1.5 ml-1">
-                      Discipline / Research Area
-                    </label>
+                    <label className="block text-sm font-semibold text-emerald-800 mb-1.5 ml-1">Discipline / Research Area *</label>
                     <input
                       type="text"
                       name="discipline"
@@ -297,97 +293,161 @@ const Submit = () => {
                     />
                   </div>
 
-                  {/* Authors & Email - Side by Side */}
-                  <div>
-                    <label className="block text-sm font-medium text-emerald-800 mb-1.5 ml-1">Author(s)</label>
-                    <input
-                      type="text"
-                      name="authors"
-                      value={formData.authors}
-                      onChange={handleInputChange}
-                      placeholder="e.g. John Doe, Jane Smith"
-                      required
-                      className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all"
-                    />
-                  </div>
+                  {/* ======================================================= */}
+                  {/* PROFESSIONAL DYNAMIC AUTHORS SECTION */}
+                  {/* ======================================================= */}
+                  <div className="md:col-span-2 mt-2 mb-2 p-5 bg-[#F8FAFC]/80 border border-emerald-100 rounded-2xl shadow-sm">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                      <div>
+                        <h3 className="text-xl font-bold text-[#713F12]">Authors Information</h3>
+                        <p className="text-xs text-[#854D0E]/70 mt-1">Add up to 15 authors for this manuscript.</p>
+                      </div>
+                      <span className="text-xs font-bold px-3 py-1.5 bg-emerald-100 text-[#059669] rounded-full whitespace-nowrap self-start sm:self-auto">
+                        {authorsList.length} / 15 Added
+                      </span>
+                    </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-emerald-800 mb-1.5 ml-1">Contact Email</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      placeholder="author@university.edu"
-                      required
-                      className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all"
-                    />
-                  </div>
+                    {/* Scrollable Container so the page doesn't stretch infinitely */}
+                    <div 
+                      id="authors-container"
+                      className="space-y-4 max-h-[460px] overflow-y-auto pr-2 custom-scrollbar"
+                      style={{ scrollbarWidth: 'thin', scrollbarColor: '#A7F3D0 transparent' }}
+                    >
+                      {authorsList.map((author, index) => (
+                        <div 
+                          key={index} 
+                          className="p-4 rounded-xl border border-emerald-100 bg-white relative group transition-all hover:border-[#10B981] hover:shadow-md"
+                        >
+                          {/* Header of Each Author Card */}
+                          <div className="flex justify-between items-center mb-4 border-b border-emerald-50 pb-3">
+                            <h4 className="font-semibold text-emerald-800 flex items-center gap-2">
+                              <div className="bg-emerald-100 p-1.5 rounded-lg text-[#10B981]">
+                                <User size={16} />
+                              </div>
+                              Author {index + 1}
+                              {index === 0 && (
+                                <span className="text-[10px] font-bold bg-[#10B981] text-white px-2 py-0.5 rounded-md ml-2 tracking-wide">
+                                  Primary
+                                </span>
+                              )}
+                            </h4>
+                            
+                            {/* Remove button */}
+                            {authorsList.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => removeAuthor(index)}
+                                className="text-red-400 hover:text-red-600 hover:bg-red-50 transition-colors flex items-center gap-1.5 text-sm font-semibold px-2.5 py-1.5 rounded-lg"
+                              >
+                                <Trash2 size={16} /> 
+                                <span className="hidden sm:inline">Remove</span>
+                              </button>
+                            )}
+                          </div>
 
-                  {/* Keywords - Full Width */}
+                          {/* Inputs for Author */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block text-xs font-semibold text-emerald-700 mb-1.5 ml-1">Full Name *</label>
+                              <input
+                                type="text"
+                                value={author.name}
+                                onChange={(e) => handleAuthorChange(index, "name", e.target.value)}
+                                placeholder="e.g. John Doe"
+                                required
+                                className="w-full p-3 text-sm rounded-lg border border-emerald-100 bg-emerald-50/20 focus:bg-white focus:ring-2 focus:ring-[#10B981] outline-none transition-all"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs font-semibold text-emerald-700 mb-1.5 ml-1">Email Address *</label>
+                              <input
+                                type="email"
+                                value={author.email}
+                                onChange={(e) => handleAuthorChange(index, "email", e.target.value)}
+                                placeholder="john@university.edu"
+                                required
+                                className="w-full p-3 text-sm rounded-lg border border-emerald-100 bg-emerald-50/20 focus:bg-white focus:ring-2 focus:ring-[#10B981] outline-none transition-all"
+                              />
+                            </div>
+                            <div className="md:col-span-2">
+                              <label className="block text-xs font-semibold text-emerald-700 mb-1.5 ml-1">Affiliation / Institute *</label>
+                              <input
+                                type="text"
+                                value={author.affiliation}
+                                onChange={(e) => handleAuthorChange(index, "affiliation", e.target.value)}
+                                placeholder="e.g. Department of CS, XYZ University, Country"
+                                required
+                                className="w-full p-3 text-sm rounded-lg border border-emerald-100 bg-emerald-50/20 focus:bg-white focus:ring-2 focus:ring-[#10B981] outline-none transition-all"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Add Author Button */}
+                    {authorsList.length < 15 && (
+                      <button
+                        type="button"
+                        onClick={addAuthor}
+                        className="mt-5 w-full py-3.5 border-2 border-dashed border-[#10B981]/50 text-[#059669] rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-[#10B981] hover:text-white hover:border-[#10B981] transition-all duration-300"
+                      >
+                        <Plus size={20} /> Add Another Author
+                      </button>
+                    )}
+                  </div>
+                  {/* ======================================================= */}
+
+                  {/* Keywords */}
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-emerald-800 mb-1.5 ml-1">Keywords</label>
+                    <label className="block text-sm font-semibold text-emerald-800 mb-1.5 ml-1">Keywords *</label>
                     <input
                       type="text"
                       name="keywords"
                       value={formData.keywords}
                       onChange={handleInputChange}
-                      placeholder="e.g. AI, Machine Learning, Data Science"
+                      placeholder="e.g. AI, Machine Learning, Data Science (comma separated)"
                       required
                       className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all"
                     />
                   </div>
 
-                  {/* Abstract - Changed to Textarea for better UX */}
+                  {/* Abstract */}
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-emerald-800 mb-1.5 ml-1">Abstract</label>
+                    <label className="block text-sm font-semibold text-emerald-800 mb-1.5 ml-1">Abstract *</label>
                     <textarea
                       name="abstract"
                       value={formData.abstract}
                       onChange={handleInputChange}
                       placeholder="Summarize your research findings..."
                       required
-                      rows={4}
+                      rows={5}
                       className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all resize-none"
                     />
                   </div>
-
-                  {/* Affiliations */}
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-emerald-800 mb-1.5 ml-1">Author Affiliations</label>
-                    <textarea
-                      name="affiliation"
-                      value={formData.affiliation}
-                      onChange={handleInputChange}
-                      placeholder="e.g. John Doe - Department of CS, XYZ University, India"
-                      required
-                      rows={3}
-                      className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all resize-none"
-                    />
-                  </div>
-
                 </div>
 
                 {/* File Upload Section */}
-                <div className="space-y-4">
-                  <label className="block text-sm font-medium text-emerald-800 ml-1">Manuscript Documents</label>
+                <div className="space-y-4 pt-4 border-t border-emerald-100 mt-6">
+                  <div className="mb-4">
+                     <label className="block text-xl font-bold text-[#713F12] ml-1">Manuscript Documents</label>
+                     <p className="text-sm text-[#854D0E]/70 ml-1 mt-1">Upload your manuscript and any supporting files.</p>
+                  </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {/* Dynamic Upload Boxes */}
-                    {/* // 1. Update the loop to pass the ID correctly */}
                     {[
-                      { id: "manuscriptFile", label: "Manuscript", sub: "PDF, DOCX" },
+                      { id: "manuscriptFile", label: "Manuscript *", sub: "PDF, DOCX" },
                       { id: "coverLetter", label: "Cover Letter", sub: "PDF, DOCX" },
                       { id: "figures", label: "Figures", sub: "Images/ZIP" },
                       { id: "tables", label: "Tables", sub: "Excel/Word" },
                       { id: "ethicalDeclaration", label: "Ethical Dec.", sub: "PDF" },
                       { id: "aiReport", label: "AI Report", sub: "PDF" },
-                    ].map((item, index) => (
+                    ].map((item) => (
                       <div
-                        key={item.id} // Better to use ID as key
+                        key={item.id}
                         className={`relative border-2 border-dashed rounded-2xl p-6 transition-all flex flex-col items-center justify-center text-center
-      ${files[item.id]
-                            ? "border-[#10B981] bg-emerald-50/50"
+                        ${files[item.id]
+                            ? "border-[#10B981] bg-emerald-50/60"
                             : "border-emerald-200 bg-emerald-50/20 hover:border-[#10B981] hover:bg-emerald-50/40"
                           }`}
                       >
@@ -395,29 +455,28 @@ const Submit = () => {
                           <>
                             <input
                               type="file"
-                              // We use the event target to reset the value instead of one shared ref
                               className="absolute inset-0 opacity-0 cursor-pointer z-10"
-                              onChange={(e) => handleFileChange(e, item.id)} // FIXED: Pass item.id here
+                              onChange={(e) => handleFileChange(e, item.id)}
                               accept=".pdf,.docx,.doc"
                             />
-                            <div className="bg-white p-3 rounded-full shadow-sm mb-3">
+                            <div className="bg-white p-3 rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform">
                               <Upload size={20} className="text-[#10B981]" />
                             </div>
                             <p className="text-[#713F12] text-sm font-semibold">{item.label}</p>
                             <p className="text-[10px] text-[#854D0E] uppercase tracking-wider mt-1">{item.sub}</p>
                           </>
                         ) : (
-                          <div className="flex flex-col items-center w-full">
+                          <div className="flex flex-col items-center w-full relative z-20">
                             <FileCheck className="text-[#10B981] mb-2" size={24} />
-                            <p className="text-[#713F12] text-xs font-medium truncate w-full px-2">
+                            <p className="text-[#713F12] text-xs font-semibold truncate w-full px-2" title={files[item.id].name}>
                               {files[item.id].name}
                             </p>
                             <button
                               type="button"
                               onClick={() => removeFile(item.id)}
-                              className="mt-2 text-xs text-red-500 hover:underline flex items-center gap-1"
+                              className="mt-3 px-4 py-1.5 bg-white border border-red-200 text-xs text-red-500 font-medium rounded-lg hover:bg-red-50 hover:text-red-600 hover:border-red-300 transition-all flex items-center gap-1.5 shadow-sm"
                             >
-                              <X size={12} /> Remove
+                              <X size={14} /> Remove
                             </button>
                           </div>
                         )}
@@ -426,12 +485,12 @@ const Submit = () => {
                   </div>
                 </div>
 
-                {/* Submit Button */}
+                {/* Final Submit Button */}
                 <button
                   type="submit"
                   disabled={isLoading}
                   className={`w-full py-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-3 shadow-lg mt-8
-      ${isLoading
+                  ${isLoading
                       ? "bg-emerald-300 cursor-not-allowed text-white"
                       : "bg-[#10B981] text-white hover:bg-[#059669] hover:shadow-emerald-200 active:scale-[0.99]"
                     }`}
@@ -442,7 +501,7 @@ const Submit = () => {
                     </>
                   ) : (
                     <>
-                      <CheckCircle size={20} /> Submit Manuscript
+                      <CheckCircle size={22} /> Submit Manuscript
                     </>
                   )}
                 </button>
@@ -450,8 +509,11 @@ const Submit = () => {
             )}
           </div>
 
-          {/* Guidelines Sidebar */}
-          <div className="lg:col-span-5 space-y-6">
+          {/* ======================================================= */}
+          {/* RIGHT SIDEBAR (STICKY - NO WHITE GAPS)                    */}
+          {/* ======================================================= */}
+          <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-28 self-start">
+            
             <div className="bg-[#10B981] p-8 rounded-[2.5rem] text-white shadow-xl shadow-emerald-200 relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform">
                 <FileText size={120} />
@@ -493,21 +555,37 @@ const Submit = () => {
             </div>
 
             <div className="bg-white p-8 rounded-[2rem] border border-emerald-100 shadow-sm">
-              <h4 className="text-[#713F12] font-bold mb-2">Need Help?</h4>
-              <p className="text-[#854D0E]/70 text-sm mb-4">
+              <h4 className="text-[#713F12] text-xl font-bold mb-2">Need Help?</h4>
+              <p className="text-[#854D0E]/70 text-sm mb-5 leading-relaxed">
                 Facing issues during submission? Our technical team is here to
-                help.
+                help you upload your files and authors.
               </p>
               <a
                 href="mailto:support@mparesearch.com"
-                className="text-[#10B981] font-semibold text-sm hover:underline"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-50 text-[#10B981] font-bold text-sm rounded-xl hover:bg-[#10B981] hover:text-white transition-all"
               >
                 Contact Support →
               </a>
             </div>
+
           </div>
+
         </div>
       </div>
+
+      {/* Adding global css style for scrollbar */}
+      <style dangerouslySetInnerHTML={{__html: `
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background-color: #6EE7B7;
+          border-radius: 10px;
+        }
+      `}} />
     </div>
   );
 };

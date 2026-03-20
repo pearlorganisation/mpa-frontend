@@ -16,7 +16,12 @@ const ReviseManuscript = () => {
   const manuscript = fetchRes?.manuscript;
 
   const [files, setFiles] = useState({
-    manuscriptFile: null, coverLetter: null, figures: null, tables: null, ethicalDeclaration: null,
+    manuscriptFile: null,
+    coverLetter: null,
+    figures: null,
+    tables: null,
+    ethicalDeclaration: null,
+    aiReport: null,
   });
 
   const handleFileChange = (e, fileType) => {
@@ -36,12 +41,12 @@ const ReviseManuscript = () => {
 
     try {
       const data = new FormData();
-      // Sirf wahi files bhejenge jo researcher ne nayi select ki hain
       if (files.manuscriptFile) data.append("manuscriptFile", files.manuscriptFile);
       if (files.coverLetter) data.append("coverLetter", files.coverLetter);
       if (files.figures) data.append("figures", files.figures);
       if (files.tables) data.append("tables", files.tables);
       if (files.ethicalDeclaration) data.append("ethicalDeclaration", files.ethicalDeclaration);
+      if (files.aiReport) data.append("aiReport", files.aiReport);
 
       await submitRevision({ id, data }).unwrap();
 
@@ -78,8 +83,8 @@ const ReviseManuscript = () => {
           <div className="mb-6 p-4 bg-emerald-50 text-emerald-800 rounded-xl flex items-start gap-3 text-sm">
             <Info className="flex-shrink-0 mt-0.5" size={18} />
             <p>
-              Your text data (Title, Abstract, etc.) is safe. 
-              <strong> You only need to upload the specific files that the editor requested to be changed.</strong> 
+              Your text data (Title, Abstract, etc.) is safe.
+              <strong> You only need to upload the specific files that the editor requested to be changed.</strong>
               If a file doesn't need changes, leave its box empty.
             </p>
           </div>
@@ -92,6 +97,7 @@ const ReviseManuscript = () => {
                 { id: "figures", label: "Figures", sub: "Images/ZIP", exist: manuscript?.files?.figures },
                 { id: "tables", label: "Tables", sub: "Excel/Word", exist: manuscript?.files?.tables },
                 { id: "ethicalDeclaration", label: "Ethical Dec.", sub: "PDF", exist: manuscript?.files?.ethicalDeclaration },
+                { id: "aiReport", label: "AI Report", sub: "PDF", exist: manuscript?.files?.aiReport },
               ].map((item) => (
                 <div key={item.id} className={`relative border-2 border-dashed rounded-2xl p-6 transition-all flex flex-col items-center justify-center text-center ${files[item.id] ? "border-[#10B981] bg-emerald-50" : "border-emerald-200 bg-emerald-50/20 hover:border-[#10B981]"}`}>
                   {!files[item.id] ? (
