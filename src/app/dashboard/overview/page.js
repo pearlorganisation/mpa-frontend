@@ -1,13 +1,15 @@
 "use client";
 
 
+
+import ResearcherProfile from "@/components/ResearcherPannel/Profile";
 import React from "react";
 
 
-export default function Overview(){
+export default function myProfile({children}){
     return(
-       <div>
-  <h1>hii this is Overview</h1>
+       <div className="flex">
+  <ResearcherProfile/>
 </div>
     )
 }

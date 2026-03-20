@@ -1,14 +1,15 @@
 "use client";
 
 
-import ResearcherProfile from "@/components/ResearcherPannel/Profile";
+
+import MyProfile from "@/components/ResearcherPannel/MyProfile";
 import React from "react";
 
 
-export default function myProfile({children}){
+export default function myProfilePage({children}){
     return(
        <div className="flex">
-  <ResearcherProfile/>
+  <MyProfile/>
 </div>
     )
 }

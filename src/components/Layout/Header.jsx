@@ -1,5 +1,5 @@
 "use client"
-import { User, LogOut, LayoutDashboard, ChevronDown, Menu, X } from "lucide-react"; // Removed unused 'Search'
+import { User, LogOut, LayoutDashboard, ChevronDown, Menu, X } from "lucide-react"; 
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
