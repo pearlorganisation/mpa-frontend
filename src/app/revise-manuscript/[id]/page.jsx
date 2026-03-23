@@ -93,6 +93,7 @@ const ReviseManuscript = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
                 { id: "manuscriptFile", label: "Manuscript", sub: "PDF, DOCX", exist: manuscript?.files?.manuscriptFile },
+                 { id: "revise", label: "Revise Document", sub: "PDF, DOCX", exist: manuscript?.files?.manuscriptFile },
                 { id: "coverLetter", label: "Cover Letter", sub: "PDF, DOCX", exist: manuscript?.files?.coverLetter },
                 { id: "figures", label: "Figures", sub: "Images/ZIP", exist: manuscript?.files?.figures },
                 { id: "tables", label: "Tables", sub: "Excel/Word", exist: manuscript?.files?.tables },

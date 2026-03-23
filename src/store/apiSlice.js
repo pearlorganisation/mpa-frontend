@@ -52,6 +52,17 @@ export const apiSlice = createApi({
       }),
       providesTags: ["User"],
     }),
+
+  updateProfile: builder.mutation({
+      query: (userData) => ({
+        url: "/users/profile",
+        method: "PUT",
+        body: userData,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+
     getMySubmissions: builder.query({
       query: () => ({
         url: "/manuscripts/my-submissions",
@@ -79,6 +90,7 @@ export const apiSlice = createApi({
     useVerifyEmailQuery,
     useGetEditorialsQuery,
     useGetMeQuery,
+     useUpdateProfileMutation,
     useGetMySubmissionsQuery,
     useGetManuscriptByIdQuery,
     useSubmitRevisionMutation,

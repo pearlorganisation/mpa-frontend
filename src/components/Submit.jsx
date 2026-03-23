@@ -14,6 +14,7 @@ import {
   Plus,
   Trash2,
   User,
+  ChevronDown,
 } from "lucide-react";
 import { useSubmitManuscriptMutation } from "../store/apiSlice";
 import { useRouter } from "next/navigation";
@@ -30,6 +31,7 @@ const Submit = () => {
     discipline: "",
     abstract: "",
     keywords: "",
+    manuscriptType: ""
   });
 
   // Dynamic Authors State (Array of objects for multiple authors)
@@ -145,6 +147,7 @@ const Submit = () => {
       data.append("title", formData.title);
       data.append("discipline", formData.discipline);
       data.append("abstract", formData.abstract);
+         data.append("manuscriptType", formData.manuscriptType);
       data.append(
         "keywords",
         JSON.stringify(formData.keywords.split(",").map((k) => k.trim()))
@@ -177,6 +180,7 @@ const Submit = () => {
         discipline: "",
         abstract: "",
         keywords: "",
+        manuscriptType: ""
       });
       setAuthorsList([{ name: "", email: "", affiliation: "" }]);
       setFiles({
@@ -292,6 +296,24 @@ const Submit = () => {
                       className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all"
                     />
                   </div>
+
+                   <div className="md:col-span-2">
+                  <label className="block text-sm font-semibold text-emerald-800 mb-1.5 ml-1">Submission Type *</label>
+                  <div className="relative">
+                    <select
+                      name="manuscriptType"
+                      value={formData.manuscriptType}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:ring-2 focus:ring-[#10B981] outline-none appearance-none transition-all"
+                    >
+                      <option value="">Select manuscript type</option>
+                      <option value="review">Research Paper</option>
+                      <option value="response">Review Paper</option>
+                    </select>
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-600 pointer-events-none" size={20} />
+                  </div>
+                </div>
 
                   {/* ======================================================= */}
                   {/* PROFESSIONAL DYNAMIC AUTHORS SECTION */}
