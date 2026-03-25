@@ -7,11 +7,13 @@ import EditorialBoard from "@/components/EditorialBoard";
 import Guidelines from "@/components/Guidelines";
 import Contact from "@/components/Contact";
 import AiPolicySection from "@/components/AiPolicySection";
+import PublishedArticles from "@/components/PublishedArticle";
 const Page = () => {
   return (
     <div>
       <Hero />
       <About />
+      <PublishedArticles />
       <Articles />
       <Submit />
       <EditorialBoard />

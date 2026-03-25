@@ -1,5 +1,5 @@
 "use client"
-import { User, LogOut, LayoutDashboard, ChevronDown, Menu, X } from "lucide-react"; 
+import { User, LogOut, LayoutDashboard, ChevronDown, Menu, X, Search } from "lucide-react"; 
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
@@ -73,6 +73,12 @@ const Header = () => {
               </Link>
             ))}
           </div>
+          
+           <div className="text-green-800">
+            <Link href="/menuscript-search">
+            <Search className="text-[#854D0E]"  size={20} />
+            </Link>
+           </div>
 
           <div className="flex items-center gap-4">
             {isLoggedIn ? (

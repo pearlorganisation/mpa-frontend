@@ -1,38 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   User as UserIcon, 
   Mail, 
-  MapPin, 
-  BookOpen, 
-  Award, 
-  BarChart3, 
   Calendar,
-  ExternalLink,
   Edit3,
-  FileText,
   Loader2,
   CheckCircle,
-  X
+  X,
+  Building2 // Added for affiliation icon
 } from 'lucide-react';
-// Import your mutation alongside the queries
 import { 
   useGetMeQuery, 
   useGetMySubmissionsQuery,
-  // useUpdateProfileMutation // Uncomment this if you have the mutation ready
+  useUpdateProfileMutation // 1. Import the mutation
 } from '@/store/apiSlice';
 
 const MyProfile = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: '' });
+  
+  // 2. Local state for form fields
+  const [formData, setFormData] = useState({ 
+    name: '', 
+    affiliation: '' 
+  });
 
-  // 1. Fetch Data
+  // 3. Fetch Data
   const { data: userData, isLoading: isUserLoading, error: userError } = useGetMeQuery();
-  const { data: subData, isLoading: isSubLoading } = useGetMySubmissionsQuery();
+  const { data: subData } = useGetMySubmissionsQuery();
+  
+  // 4. Mutation Hook
+  const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
 
   const user = userData?.user;
-  const submissions = subData?.submissions || [];
 
-  // 2. Handle Loading State
+  // 5. Initialize form data when user data is loaded or modal opens
+  const handleEditClick = () => {
+    setFormData({ 
+      name: user?.name || '', 
+      affiliation: user?.affiliation || '' 
+    });
+    setIsEditModalOpen(true);
+  };
+
+  // 6. Handle API Submission
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      await updateProfile(formData).unwrap();
+      // On success:
+      setIsEditModalOpen(false);
+      // You could add a toast notification here
+      alert("Profile updated successfully!");
+    } catch (err) {
+      console.error("Failed to update profile:", err);
+      alert(err?.data?.message || "Something went wrong");
+    }
+  };
+
   if (isUserLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FDFBF7]">
@@ -41,7 +65,6 @@ const MyProfile = () => {
     );
   }
 
-  // 3. Handle Error State
   if (userError || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FDFBF7]">
@@ -53,18 +76,6 @@ const MyProfile = () => {
       </div>
     );
   }
-
-  const handleEditClick = () => {
-    setFormData({ name: user.name });
-    setIsEditModalOpen(true);
-  };
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    // Logic to call your update mutation would go here
-    console.log("Updating name to:", formData.name);
-    setIsEditModalOpen(false);
-  };
 
   return (
     <div className="min-h-screen bg-[#FDFBF7] p-4 md:p-8">
@@ -105,6 +116,12 @@ const MyProfile = () => {
                     <Mail size={18} className="text-gray-400" />
                     <span className="text-sm truncate">{user.email}</span>
                   </div>
+                  {user.affiliation && (
+                    <div className="flex items-center gap-3 text-gray-600">
+                      <Building2 size={18} className="text-gray-400" />
+                      <span className="text-sm text-left">{user.affiliation}</span>
+                    </div>
+                  )}
                   <div className="flex items-center gap-3 text-gray-600">
                     <Calendar size={18} className="text-gray-400" />
                     <span className="text-sm text-left">
@@ -115,10 +132,9 @@ const MyProfile = () => {
               </div>
             </div>
 
-            {/* Verification Status Card */}
             <div className="bg-emerald-50 rounded-2xl p-5 border border-emerald-100">
               <h3 className="text-[#5D3A1A] font-bold mb-2 flex items-center gap-2">
-                <Award size={18} className="text-emerald-600" />
+                <CheckCircle size={18} className="text-emerald-600" />
                 Account Status
               </h3>
               <p className="text-sm text-emerald-800">
@@ -127,14 +143,9 @@ const MyProfile = () => {
             </div>
           </div>
 
-          {/* Right Column: Stats and Submissions */}
+          {/* Right Column: Can include Submissions List here */}
           <div className="lg:col-span-2 space-y-6">
-            
-            {/* Stats Grid */}
-           
-
-            {/* Submissions Section */}
-            
+             {/* Add your Submissions list component here */}
           </div>
         </div>
       </div>
@@ -154,12 +165,25 @@ const MyProfile = () => {
                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">Full Name</label>
                 <input 
                   type="text"
+                  required
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                   className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#10B981] focus:ring-2 focus:ring-emerald-50 outline-none transition-all"
                   placeholder="Enter your name"
                 />
               </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Affiliation</label>
+                <input 
+                  type="text"
+                  value={formData.affiliation}
+                  onChange={(e) => setFormData({...formData, affiliation: e.target.value})}
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#10B981] focus:ring-2 focus:ring-emerald-50 outline-none transition-all"
+                  placeholder="University or Institution"
+                />
+              </div>
+
               <div>
                 <label className="block text-sm font-semibold text-gray-400 mb-1.5">Email Address (Cannot be changed)</label>
                 <input 
@@ -169,19 +193,22 @@ const MyProfile = () => {
                   className="w-full px-4 py-2.5 rounded-xl border border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed"
                 />
               </div>
+
               <div className="flex gap-3 pt-4">
                 <button 
                   type="button"
+                  disabled={isUpdating}
                   onClick={() => setIsEditModalOpen(false)}
-                  className="flex-1 px-6 py-2.5 rounded-xl font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all"
+                  className="flex-1 px-6 py-2.5 rounded-xl font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 transition-all disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button 
                   type="submit"
-                  className="flex-1 px-6 py-2.5 rounded-xl font-semibold bg-[#10B981] text-white hover:bg-emerald-600 shadow-lg shadow-emerald-100 transition-all"
+                  disabled={isUpdating}
+                  className="flex-1 px-6 py-2.5 rounded-xl font-semibold bg-[#10B981] text-white hover:bg-emerald-600 shadow-lg shadow-emerald-100 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
                 >
-                  Save Changes
+                  {isUpdating ? <Loader2 size={18} className="animate-spin" /> : "Save Changes"}
                 </button>
               </div>
             </form>

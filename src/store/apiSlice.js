@@ -70,6 +70,13 @@ export const apiSlice = createApi({
       }),
       providesTags: ["Manuscript"],
     }),
+
+    getPublishedArticles: builder.query({
+  query: () => "/manuscripts/published",
+  providesTags: ["Manuscript"],
+}),
+
+
     getManuscriptById: builder.query({
       query: (id) => `/manuscripts/${id}`,
     }),
@@ -92,6 +99,7 @@ export const apiSlice = createApi({
     useGetMeQuery,
      useUpdateProfileMutation,
     useGetMySubmissionsQuery,
+    useGetPublishedArticlesQuery,
     useGetManuscriptByIdQuery,
     useSubmitRevisionMutation,
   } = apiSlice;
