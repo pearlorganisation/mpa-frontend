@@ -14,7 +14,7 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Manuscript", "User", "Editorial"],
+  tagTypes: ["Manuscript", "User", "Editorial", "Enquiry"],
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (credentials) => ({
@@ -53,7 +53,7 @@ export const apiSlice = createApi({
       providesTags: ["User"],
     }),
 
-  updateProfile: builder.mutation({
+    updateProfile: builder.mutation({
       query: (userData) => ({
         url: "/users/profile",
         method: "PUT",
@@ -62,7 +62,6 @@ export const apiSlice = createApi({
       invalidatesTags: ["User"],
     }),
 
-
     getMySubmissions: builder.query({
       query: () => ({
         url: "/manuscripts/my-submissions",
@@ -70,12 +69,10 @@ export const apiSlice = createApi({
       }),
       providesTags: ["Manuscript"],
     }),
-
     getPublishedArticles: builder.query({
-  query: () => "/manuscripts/published",
-  providesTags: ["Manuscript"],
-}),
-
+      query: () => "/manuscripts/published",
+      providesTags: ["Manuscript"],
+    }),
 
     getManuscriptById: builder.query({
       query: (id) => `/manuscripts/${id}`,
@@ -87,19 +84,29 @@ export const apiSlice = createApi({
         body: data,
       }),
     }),
+    sendEnquiry: builder.mutation({
+      query: (formData) => ({
+        url: "/enquiry/send",
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: ["Enquiry"],
+    }),
   }),
-  });
+});
 
-  export const {
-    useLoginMutation,
-    useRegisterMutation,
-    useSubmitManuscriptMutation,
-    useVerifyEmailQuery,
-    useGetEditorialsQuery,
-    useGetMeQuery,
-     useUpdateProfileMutation,
-    useGetMySubmissionsQuery,
-    useGetPublishedArticlesQuery,
-    useGetManuscriptByIdQuery,
-    useSubmitRevisionMutation,
-  } = apiSlice;
+export const {
+  useLoginMutation,
+  useRegisterMutation,
+  useSubmitManuscriptMutation,
+  useVerifyEmailQuery,
+  useGetEditorialsQuery,
+  useGetMeQuery,
+  useUpdateProfileMutation,
+  useGetMySubmissionsQuery,
+  useGetPublishedArticlesQuery,
+  useGetManuscriptByIdQuery,
+  useSubmitRevisionMutation,
+  useSendEnquiryMutation,
+   
+} = apiSlice;
