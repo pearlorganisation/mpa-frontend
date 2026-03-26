@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useGetMeQuery, useGetMySubmissionsQuery } from '@/store/apiSlice';
 
-const ResearcherProfile = () => {
+const Overview = () => {
   const { data: userData, isLoading: isUserLoading, error: userError } = useGetMeQuery();
   const { data: subData, isLoading: isSubLoading } = useGetMySubmissionsQuery();
 
@@ -131,7 +131,7 @@ const ResearcherProfile = () => {
                   <div className="p-2 sm:p-3 bg-[#FDFBF7] rounded-xl mb-3 group-hover:scale-110 transition-transform">
                     {stat.icon}
                   </div>
-                  <div className="text-lg sm:text-xl font-bold text-[#5D3A1A] uppercase truncate w-full">
+                  <div className="text-sm sm:text-lg font-bold text-[#5D3A1A] uppercase truncate w-full">
                     {stat.value}
                   </div>
                   <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">
@@ -209,4 +209,4 @@ const ResearcherProfile = () => {
   );
 };
 
-export default ResearcherProfile;
+export default Overview;

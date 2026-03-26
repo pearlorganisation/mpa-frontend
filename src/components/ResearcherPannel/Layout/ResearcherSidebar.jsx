@@ -36,7 +36,7 @@ const ResearcherSidebar = () => {
     { name: 'Home', icon: <Home size={20} />, path: '/' },
     { name: 'Overview', icon: <LayoutDashboard size={20} />, path: '/dashboard/overview' },
     { name: 'Profile', icon: <User size={20} />, path: '/dashboard/my-profile' },
-    { name: 'My Submissions', icon: <Send size={20} />, path: '/dashboard/submissions' },
+    { name: 'My Submissions', icon: <Send size={20} />, path: '/dashboard/my-submissions' },
   ];
 
   const handleLogout = () => {

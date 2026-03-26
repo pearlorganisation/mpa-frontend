@@ -63,7 +63,7 @@ export default function SearchPublishedPage() {
             <input
               type="text"
               placeholder="Search by title, keywords, or abstract..."
-              className="w-full pl-14 pr-6 py-5 bg-white rounded-3xl ring-[#5D3A1A] shadow-xl shadow-emerald-900/5 border-none focus:ring-2 focus:ring-emerald-500 outline-none text-lg transition-all"
+              className="w-full pl-14 pr-6 py-5 bg-gray-200  rounded-3xl border-[#5D3A1A] shadow-xl shadow-emerald-900/5 border-none focus:ring-2 focus:ring-emerald-500 outline-none text-lg transition-all"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
