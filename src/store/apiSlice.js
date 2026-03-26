@@ -71,6 +71,23 @@ export const apiSlice = createApi({
       providesTags: ["Manuscript"],
     }),
 
+ 
+    
+    
+    getManuscriptById: builder.query({
+      
+      query: (id) => `/manuscripts/published/${id}`, 
+      providesTags: (result, error, id) => [{ type: 'Manuscript', id }],
+    }),
+
+   
+    getPublishedArticles: builder.query({
+      query: (search = "") => `/manuscripts/published${search ? `?search=${search}` : ""}`,
+      providesTags: ["Manuscript"],
+    }),
+
+// ... rest of code
+
     getPublishedArticles: builder.query({
   query: () => "/manuscripts/published",
   providesTags: ["Manuscript"],
