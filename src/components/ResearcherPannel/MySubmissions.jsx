@@ -147,7 +147,7 @@ export default function MySubmissions() {
                                 </div>
 
                                 <div className="shrink-0 flex items-center gap-4">
-                                    <Link href={`/published-article/${manuscript._id}`} className="w-full md:w-auto">
+                                    <Link href={`my-submissions/${manuscript._id}`} className="w-full md:w-auto">
                                         <button className="w-full flex items-center justify-center gap-2 bg-gray-900 text-white px-8 py-3.5 rounded-2xl font-bold hover:bg-emerald-600 transition-all shadow-lg shadow-gray-200">
                                             Review Submission
                                             <ChevronRight size={18} />

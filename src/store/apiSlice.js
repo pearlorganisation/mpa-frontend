@@ -4,13 +4,25 @@ export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_URL,
-    prepareHeaders: (headers) => {
+    prepareHeaders: (headers, { endpoint }) => {
+      if (endpoint === "submitManuscript") {
+        if (typeof window !== "undefined") {
+          const token = localStorage.getItem("token");
+          if (token) {
+            headers.set("authorization", `Bearer ${token}`);
+          }
+        }
+        return headers;
+      }
+      headers.set("Content-Type", "application/json");
+
       if (typeof window !== "undefined") {
         const token = localStorage.getItem("token");
         if (token) {
           headers.set("authorization", `Bearer ${token}`);
         }
       }
+
       return headers;
     },
   }),
@@ -35,6 +47,7 @@ export const apiSlice = createApi({
         url: "/manuscripts/submit",
         method: "POST",
         body: formData,
+        headers: {},
       }),
       invalidatesTags: ["Manuscript"],
     }),
@@ -69,8 +82,9 @@ export const apiSlice = createApi({
       }),
       providesTags: ["Manuscript"],
     }),
+
     getPublishedArticles: builder.query({
-      query: () => "/manuscripts/published",
+      query: (search = "") => `/manuscripts/published${search ? `?search=${search}` : ""}`,
       providesTags: ["Manuscript"],
     }),
 
@@ -108,5 +122,5 @@ export const {
   useGetManuscriptByIdQuery,
   useSubmitRevisionMutation,
   useSendEnquiryMutation,
-   
+
 } = apiSlice;
