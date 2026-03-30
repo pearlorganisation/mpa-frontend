@@ -22,6 +22,7 @@ const ReviseManuscript = () => {
     tables: null,
     ethicalDeclaration: null,
     aiReport: null,
+    reviewChecklist: null,
   });
 
   const handleFileChange = (e, fileType) => {
@@ -47,6 +48,7 @@ const ReviseManuscript = () => {
       if (files.tables) data.append("tables", files.tables);
       if (files.ethicalDeclaration) data.append("ethicalDeclaration", files.ethicalDeclaration);
       if (files.aiReport) data.append("aiReport", files.aiReport);
+      if (files.reviewChecklist) data.append("reviewChecklist", files.reviewChecklist);
 
       await submitRevision({ id, data }).unwrap();
 
@@ -93,7 +95,7 @@ const ReviseManuscript = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
                 { id: "manuscriptFile", label: "Manuscript", sub: "PDF, DOCX", exist: manuscript?.files?.manuscriptFile },
-                 { id: "revise", label: "Revise Document", sub: "PDF, DOCX", exist: manuscript?.files?.manuscriptFile },
+                { id: "reviewChecklist", label: "Review Feedback Checklist", sub: "PDF, DOCX", exist: manuscript?.files?.reviewChecklist },
                 { id: "coverLetter", label: "Cover Letter", sub: "PDF, DOCX", exist: manuscript?.files?.coverLetter },
                 { id: "figures", label: "Figures", sub: "Images/ZIP", exist: manuscript?.files?.figures },
                 { id: "tables", label: "Tables", sub: "Excel/Word", exist: manuscript?.files?.tables },

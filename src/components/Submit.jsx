@@ -308,8 +308,8 @@ const Submit = () => {
                       className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:ring-2 focus:ring-[#10B981] outline-none appearance-none transition-all"
                     >
                       <option value="">Select manuscript type</option>
-                      <option value="review">Research Paper</option>
-                      <option value="response">Review Paper</option>
+                      <option value="research">Research Paper</option>
+                      <option value="review">Review Paper</option>
                     </select>
                     <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-600 pointer-events-none" size={20} />
                   </div>
