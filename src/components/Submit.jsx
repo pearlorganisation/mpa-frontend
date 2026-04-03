@@ -23,10 +23,10 @@ import toast, { Toaster } from "react-hot-toast";
 const Submit = () => {
   const router = useRouter();
   const fileInputRef = useRef(null);
-  const[submitManuscript, { isLoading }] = useSubmitManuscriptMutation();
+  const [submitManuscript, { isLoading }] = useSubmitManuscriptMutation();
 
   // Basic Form States
-  const[formData, setFormData] = useState({
+  const [formData, setFormData] = useState({
     title: "",
     discipline: "",
     abstract: "",
@@ -35,7 +35,7 @@ const Submit = () => {
   });
 
   // Dynamic Authors State (Array of objects for multiple authors)
-  const[authorsList, setAuthorsList] = useState([
+  const [authorsList, setAuthorsList] = useState([
     { name: "", email: "", affiliation: "" },
   ]);
 
@@ -49,7 +49,7 @@ const Submit = () => {
   });
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const[isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
     const token =
@@ -60,11 +60,11 @@ const Submit = () => {
       setIsAuthenticated(false);
     }
     setIsCheckingAuth(false);
-  },[]);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev,[name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   // --- Authors Management Logic ---
@@ -99,7 +99,7 @@ const Submit = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const allowedTypes =[
+    const allowedTypes = [
       "application/pdf",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       "application/msword",
@@ -115,7 +115,7 @@ const Submit = () => {
       return;
     }
 
-    setFiles((prev) => ({ ...prev,[fileType]: file }));
+    setFiles((prev) => ({ ...prev, [fileType]: file }));
     toast.success("File attached successfully!");
   };
 
@@ -147,7 +147,7 @@ const Submit = () => {
       data.append("title", formData.title);
       data.append("discipline", formData.discipline);
       data.append("abstract", formData.abstract);
-         data.append("manuscriptType", formData.manuscriptType);
+      data.append("manuscriptType", formData.manuscriptType);
       data.append(
         "keywords",
         JSON.stringify(formData.keywords.split(",").map((k) => k.trim()))
@@ -195,7 +195,7 @@ const Submit = () => {
     }
   };
 
-  const steps =[
+  const steps = [
     { icon: <Upload size={24} />, title: "Submit Manuscript", desc: "Upload your research paper in PDF or Word format." },
     { icon: <FileText size={24} />, title: "Initial Review", desc: "Our editorial team checks for scope and format compliance." },
     { icon: <Clock size={24} />, title: "Peer Review", desc: "Your paper is sent to expert reviewers (typically 21 days)." },
@@ -237,7 +237,7 @@ const Submit = () => {
 
         {/* MAIN GRID CONTENT */}
         <div className="grid lg:grid-cols-12 gap-10 items-start relative">
-          
+
           {/* Main Form Card (Left Side) */}
           <div className="lg:col-span-7 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-xl shadow-emerald-900/5 border border-white">
             <h2 className="text-3xl font-bold text-[#713F12] mb-8 flex items-center gap-3">
@@ -268,7 +268,7 @@ const Submit = () => {
             ) : (
               <form className="space-y-6" onSubmit={handleFormSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  
+
                   {/* Title */}
                   <div className="md:col-span-2">
                     <label className="block text-sm font-semibold text-emerald-800 mb-1.5 ml-1">Manuscript Title *</label>
@@ -297,23 +297,30 @@ const Submit = () => {
                     />
                   </div>
 
-                   <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-emerald-800 mb-1.5 ml-1">Submission Type *</label>
-                  <div className="relative">
-                    <select
-                      name="manuscriptType"
-                      value={formData.manuscriptType}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:ring-2 focus:ring-[#10B981] outline-none appearance-none transition-all"
-                    >
-                      <option value="">Select manuscript type</option>
-                      <option value="research">Research Paper</option>
-                      <option value="review">Review Paper</option>
-                    </select>
-                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-600 pointer-events-none" size={20} />
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold text-emerald-800 mb-1.5 ml-1">Submission Type *</label>
+                    <div className="relative">
+                      <select
+                        name="manuscriptType"
+                        value={formData.manuscriptType}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:ring-2 focus:ring-[#10B981] outline-none appearance-none transition-all"
+                      >
+                        <option value="">Select manuscript type</option>
+
+                        <option value="Review Article">Review Article</option>
+                        <option value="Mini Review">Mini Review</option>
+                        <option value="Systematic Review">Systematic Review</option>
+                        <option value="Research Article">Research Article</option>
+                        <option value="Short Communication">Short Communication</option>
+                        <option value="Case Report">Case Report</option>
+                        <option value="Editorial">Editorial</option>
+
+                      </select>
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-600 pointer-events-none" size={20} />
+                    </div>
                   </div>
-                </div>
 
                   {/* ======================================================= */}
                   {/* PROFESSIONAL DYNAMIC AUTHORS SECTION */}
@@ -330,14 +337,14 @@ const Submit = () => {
                     </div>
 
                     {/* Scrollable Container so the page doesn't stretch infinitely */}
-                    <div 
+                    <div
                       id="authors-container"
                       className="space-y-4 max-h-[460px] overflow-y-auto pr-2 custom-scrollbar"
                       style={{ scrollbarWidth: 'thin', scrollbarColor: '#A7F3D0 transparent' }}
                     >
                       {authorsList.map((author, index) => (
-                        <div 
-                          key={index} 
+                        <div
+                          key={index}
                           className="p-4 rounded-xl border border-emerald-100 bg-white relative group transition-all hover:border-[#10B981] hover:shadow-md"
                         >
                           {/* Header of Each Author Card */}
@@ -353,7 +360,7 @@ const Submit = () => {
                                 </span>
                               )}
                             </h4>
-                            
+
                             {/* Remove button */}
                             {authorsList.length > 1 && (
                               <button
@@ -361,7 +368,7 @@ const Submit = () => {
                                 onClick={() => removeAuthor(index)}
                                 className="text-red-400 hover:text-red-600 hover:bg-red-50 transition-colors flex items-center gap-1.5 text-sm font-semibold px-2.5 py-1.5 rounded-lg"
                               >
-                                <Trash2 size={16} /> 
+                                <Trash2 size={16} />
                                 <span className="hidden sm:inline">Remove</span>
                               </button>
                             )}
@@ -452,8 +459,8 @@ const Submit = () => {
                 {/* File Upload Section */}
                 <div className="space-y-4 pt-4 border-t border-emerald-100 mt-6">
                   <div className="mb-4">
-                     <label className="block text-xl font-bold text-[#713F12] ml-1">Manuscript Documents</label>
-                     <p className="text-sm text-[#854D0E]/70 ml-1 mt-1">Upload your manuscript and any supporting files.</p>
+                    <label className="block text-xl font-bold text-[#713F12] ml-1">Manuscript Documents</label>
+                    <p className="text-sm text-[#854D0E]/70 ml-1 mt-1">Upload your manuscript and any supporting files.</p>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -535,7 +542,7 @@ const Submit = () => {
           {/* RIGHT SIDEBAR (STICKY - NO WHITE GAPS)                    */}
           {/* ======================================================= */}
           <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-28 self-start">
-            
+
             <div className="bg-[#10B981] p-8 rounded-[2.5rem] text-white shadow-xl shadow-emerald-200 relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform">
                 <FileText size={120} />
@@ -596,7 +603,8 @@ const Submit = () => {
       </div>
 
       {/* Adding global css style for scrollbar */}
-      <style dangerouslySetInnerHTML={{__html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
         }
