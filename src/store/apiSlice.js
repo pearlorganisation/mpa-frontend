@@ -82,10 +82,26 @@ export const apiSlice = createApi({
       }),
       providesTags: ["Manuscript"],
     }),
+    getLatestPublishedArticle: builder.query({
+      query: () => "/manuscripts/published?limit=1",
+      providesTags: ["Manuscript"],
+      transformResponse: (response) => response.articles?.[0] || null,
+    }),
 
     getPublishedArticles: builder.query({
-      query: (search = "") => `/manuscripts/published${search ? `?search=${search}` : ""}`,
+      query: ({ year, page = 1, limit = 6 } = {}) => {
+        const params = new URLSearchParams({
+          ...(year && year !== "undefined" && { year }), 
+          page,
+          limit,
+        }).toString();
+        return `/manuscripts/published?${params}`;
+      },
       providesTags: ["Manuscript"],
+    }),
+
+    getPublishedYears: builder.query({
+      query: () => "/manuscripts/year",
     }),
 
     getManuscriptById: builder.query({
@@ -106,6 +122,9 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["Enquiry"],
     }),
+    getLatestPublished: builder.query({
+      query: () => "/manuscripts/latest",
+    }),
   }),
 });
 
@@ -122,5 +141,8 @@ export const {
   useGetManuscriptByIdQuery,
   useSubmitRevisionMutation,
   useSendEnquiryMutation,
+  useGetLatestPublishedArticleQuery,
+  useGetPublishedYearsQuery,
+  useGetLatestPublishedQuery
 
 } = apiSlice;

@@ -8,14 +8,16 @@ import Guidelines from "@/components/Guidelines";
 import Contact from "@/components/Contact";
 import AiPolicySection from "@/components/AiPolicySection";
 import PublishedArticles from "@/components/PublishedArticle";
+import {Issue} from "@/components/Issue";
 const Page = () => {
   return (
     <div>
       <Hero />
       <About />
-      <PublishedArticles />
+      {/* <PublishedArticles /> */}
       <Articles />
       <Submit />
+      <Issue/>
       <EditorialBoard />
       <Guidelines />
       <AiPolicySection/>

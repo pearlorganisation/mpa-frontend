@@ -1,5 +1,5 @@
 "use client"
-import { User, LogOut, LayoutDashboard, ChevronDown, Menu, X, Search } from "lucide-react"; 
+import { User, LogOut, LayoutDashboard, ChevronDown, Menu, X, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
@@ -10,7 +10,7 @@ import { useGetMeQuery } from "@/store/apiSlice";
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const[isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
   const router = useRouter();
 
@@ -18,15 +18,15 @@ const Header = () => {
     skip: !isLoggedIn,
   });
 
-  // ✅ ADDED AI Policy Link Here
-  const navLinks =[
+  const navLinks = [
     { name: "Home", href: "/#hero" },
     { name: "About", href: "/#about" },
     { name: "Articles", href: "/#articles" },
     { name: "Submit", href: "/#submit" },
-    { name: "Editorial", href: "/#editorial-board" }, // Shortened name for better fit
+    { name: "Editorial", href: "/#editorial-board" },
     { name: "Guidelines", href: "/#guidelines" },
-    { name: "AI Policy", href: "/#ai-policy" }, // <--- New Section Link
+    { name: "AI Policy", href: "/#ai-policy" },
+    { name: "Issue", href: "/#issue" },
     { name: "Contact", href: "/#contact" },
   ];
 
@@ -41,12 +41,12 @@ const Header = () => {
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  },[]);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-   
+
     setIsLoggedIn(false);
     setIsDropdownOpen(false);
     setIsMobileMenuOpen(false);
@@ -56,7 +56,7 @@ const Header = () => {
   return (
     <header className="w-full bg-white border-b border-gray-200 sticky top-0 z-[100] shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center h-20">
-        
+
         {/* Logo Section */}
         <Link href="/" className="flex items-center hover:opacity-90 transition-opacity z-[110]">
           <div className="relative w-36 h-10 md:w-56 md:h-14">
@@ -73,12 +73,12 @@ const Header = () => {
               </Link>
             ))}
           </div>
-          
-           <div className="text-green-800">
+
+          <div className="text-green-800">
             <Link href="/menuscript-search">
-            <Search className="text-[#854D0E]"  size={20} />
+              <Search className="text-[#854D0E]" size={20} />
             </Link>
-           </div>
+          </div>
 
           <div className="flex items-center gap-4">
             {isLoggedIn ? (
@@ -118,7 +118,7 @@ const Header = () => {
 
         {/* Mobile Hamburger Button */}
         <div className="lg:hidden flex items-center z-[110]">
-          <button 
+          <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="p-2 text-[#854D0E] hover:bg-gray-100 rounded-lg transition-all"
           >
@@ -127,15 +127,15 @@ const Header = () => {
         </div>
 
         {/* Mobile Sidebar Overlay */}
-        <div 
-          className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] transition-opacity duration-300 lg:hidden ${isMobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"}`} 
-          onClick={() => setIsMobileMenuOpen(false)} 
+        <div
+          className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] transition-opacity duration-300 lg:hidden ${isMobileMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
+          onClick={() => setIsMobileMenuOpen(false)}
         />
 
         {/* Mobile Sidebar Menu */}
         <div className={`fixed top-0 right-0 h-full w-[300px] bg-white z-[105] shadow-2xl transform transition-transform duration-300 ease-in-out lg:hidden ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}>
           <div className="flex flex-col h-full pt-20">
-            
+
             {/* User Profile Section (Mobile Only) */}
             <div className="px-6 py-6 border-b border-gray-100">
               {isLoggedIn ? (
@@ -153,8 +153,8 @@ const Header = () => {
               ) : (
                 <div className="bg-gray-50 p-4 rounded-xl">
                   <p className="text-sm text-gray-600 mb-3">Sign in to access your dashboard and submit articles.</p>
-                  <Link 
-                    href="/login" 
+                  <Link
+                    href="/login"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-[#854D0E] text-white text-sm font-bold"
                   >
@@ -184,19 +184,19 @@ const Header = () => {
             {isLoggedIn && (
               <div className="p-4 border-t border-gray-100 bg-gray-50/50 flex flex-col gap-2">
                 {/* ✅ FIXED: Desktop aur Mobile dono ab /dashboard/my-profile par jayenge */}
-                <Link 
-                  href="/dashboard/my-profile" 
+                <Link
+                  href="/dashboard/my-profile"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-white text-gray-700 font-bold border border-gray-200 shadow-sm active:scale-95 transition-transform"
                 >
-                  <LayoutDashboard size={20} className="text-[#22C55E]" /> 
+                  <LayoutDashboard size={20} className="text-[#22C55E]" />
                   <span>Dashboard</span>
                 </Link>
-                <button 
+                <button
                   onClick={handleLogout}
                   className="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-red-50 text-red-600 font-bold border border-red-100 active:scale-95 transition-transform"
                 >
-                  <LogOut size={20} /> 
+                  <LogOut size={20} />
                   <span>Logout</span>
                 </button>
               </div>

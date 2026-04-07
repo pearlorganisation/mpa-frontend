@@ -46,6 +46,7 @@ const Submit = () => {
     tables: null,
     ethicalDeclaration: null,
     aiReport: null,
+    manuscriptImage: null,
   });
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -99,24 +100,32 @@ const Submit = () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    const allowedTypes = [
-      "application/pdf",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "application/msword",
-    ];
+    const isImage = file.type.startsWith("image/");
+    const isDoc =
+      file.type === "application/pdf" ||
+      file.type === "application/msword" ||
+      file.type ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
-    if (!allowedTypes.includes(file.type)) {
-      toast.error("Only PDF or Word documents are allowed");
-      return;
+    if (fileType === "manuscriptImage" || fileType === "figures") {
+      if (!isImage) {
+        toast.error("Only image files allowed (JPG, PNG, WEBP)");
+        return;
+      }
+    } else {
+      if (!isDoc) {
+        toast.error("Only PDF or Word files allowed");
+        return;
+      }
     }
 
     if (file.size > 10 * 1024 * 1024) {
-      toast.error("File size must be less than 10MB");
+      toast.error("File must be less than 10MB");
       return;
     }
 
     setFiles((prev) => ({ ...prev, [fileType]: file }));
-    toast.success("File attached successfully!");
+    toast.success("File attached!");
   };
 
   const removeFile = (fileType) => {
@@ -167,6 +176,9 @@ const Submit = () => {
       if (files.tables) data.append("tables", files.tables);
       if (files.ethicalDeclaration) data.append("ethicalDeclaration", files.ethicalDeclaration);
       if (files.aiReport) data.append("aiReport", files.aiReport);
+      if (files.manuscriptImage) {
+        data.append("manuscriptImage", files.manuscriptImage);
+      }
 
       const res = await submitManuscript(data).unwrap();
 
@@ -186,6 +198,7 @@ const Submit = () => {
       setFiles({
         manuscriptFile: null, coverLetter: null, figures: null,
         tables: null, ethicalDeclaration: null, aiReport: null,
+        manuscriptImage: null,
       });
     } catch (err) {
       console.error("Submission error:", err);
@@ -281,6 +294,69 @@ const Submit = () => {
                       required
                       className="w-full p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 focus:bg-white focus:ring-2 focus:ring-[#10B981] focus:border-transparent outline-none transition-all"
                     />
+                  </div>
+
+                  {/* ================= IMAGE UPLOAD ================= */}
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-semibold text-emerald-800 mb-2 ml-1">
+                      Manuscript Cover Image
+                    </label>
+
+                    <div className="relative border-2 border-dashed border-emerald-200 rounded-2xl p-5 bg-emerald-50/30 hover:border-[#10B981] transition-all">
+
+                      {!files.manuscriptImage ? (
+                        <>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => handleFileChange(e, "manuscriptImage")}
+                            className="absolute inset-0 opacity-0 cursor-pointer"
+                          />
+
+                          <div className="flex flex-col items-center justify-center text-center">
+                            <div className="bg-white p-3 rounded-full shadow mb-3">
+                              <Upload size={22} className="text-[#10B981]" />
+                            </div>
+
+                            <p className="text-sm font-semibold text-[#713F12]">
+                              Upload Cover Image
+                            </p>
+
+                            <p className="text-xs text-[#854D0E] mt-1">
+                              JPG, PNG • Recommended 16:9
+                            </p>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="relative group">
+                          <img
+                            src={URL.createObjectURL(files.manuscriptImage)}
+                            className="w-full h-56 object-cover rounded-xl"
+                          />
+
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-xl flex items-center justify-center gap-3">
+
+                            <button
+                              type="button"
+                              onClick={() => removeFile("manuscriptImage")}
+                              className="bg-white text-red-500 px-3 py-1 rounded-lg text-sm"
+                            >
+                              Remove
+                            </button>
+
+                            <label className="bg-white text-[#10B981] px-3 py-1 rounded-lg text-sm cursor-pointer">
+                              Change
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => handleFileChange(e, "manuscriptImage")}
+                                className="hidden"
+                              />
+                            </label>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Discipline */}
