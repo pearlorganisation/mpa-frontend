@@ -1,9 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useGetPublishedArticlesQuery } from "../../store/apiSlice";
-import { ChevronLeft, ChevronRight, Image as ImageIcon, Loader2, Edit } from "lucide-react";
+
+
 import {ArticleCard} from "@/components/articles/ArticleCard";
+import { useGetPublishedArticlesQuery } from "@/store/apiSlice";
+import { ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
 
 export default function ArticlesPage() {
   const router = useRouter();
