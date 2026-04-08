@@ -6,7 +6,7 @@ import {
   FileText,
   Clock,
   CheckCircle,
-  Loader2,
+
   X,
   FileCheck,
   AlertCircle,
@@ -15,6 +15,7 @@ import {
   Trash2,
   User,
   ChevronDown,
+  Loader2,
 } from "lucide-react";
 import { useSubmitManuscriptMutation } from "../store/apiSlice";
 import { useRouter } from "next/navigation";

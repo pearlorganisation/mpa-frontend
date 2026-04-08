@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useGetManuscriptByIdQuery } from "../../../store/apiSlice";
 import {
   ChevronLeft, FileText, Globe, BarChart2,
-  ExternalLink, Loader2, Calendar, Hash,
+  ExternalLink, Calendar, Hash,
   User, Award, BookOpen, Quote, Download,
   Mail, Building2, Eye, Layout, Clock,
   CheckCircle2, FileCheck, Share2

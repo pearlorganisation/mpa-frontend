@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 
-import {ArticleCard} from "@/components/articles/ArticleCard";
+
 import { useGetPublishedArticlesQuery } from "@/store/apiSlice";
-import { ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
+import { ChevronLeft, ChevronRight, ImageIcon, Loader2, } from "lucide-react";
+import ArticleCard from "@/components/ArticleCard";
 
 export default function ArticlesPage() {
   const router = useRouter();

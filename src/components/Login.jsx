@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useLoginMutation } from "../store/apiSlice";
 import { useRouter } from "next/navigation";
-import { Loader2, Mail, Lock, ArrowRight } from "lucide-react";
+import {  Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
 

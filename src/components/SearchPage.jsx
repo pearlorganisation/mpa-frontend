@@ -2,7 +2,8 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Search, ArrowRight, Loader2, FileText, BookOpen, Clock } from "lucide-react";
+import { Search, ArrowRight, FileText, BookOpen, Clock, Loader2
+ } from "lucide-react";
 // Import your hook from wherever your apiSlice file is located
 import { useGetPublishedArticlesQuery } from "@/redux/api/apiSlice"; 
 

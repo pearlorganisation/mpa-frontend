@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Upload, FileCheck, X, CheckCircle, Loader2, AlertCircle, Info } from "lucide-react";
+import { Upload, FileCheck, X, CheckCircle, AlertCircle, Info, Loader2, } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import { useGetManuscriptByIdQuery, useSubmitRevisionMutation } from "@/store/apiSlice"; // Update path if needed
 

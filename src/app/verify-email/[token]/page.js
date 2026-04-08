@@ -1,7 +1,7 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 import { useVerifyEmailQuery } from "@/store/apiSlice";
-import { Loader2, CheckCircle, XCircle } from "lucide-react";
+import {  CheckCircle, Loader2, XCircle } from "lucide-react";
 import { useEffect } from "react";
 
 export default function VerifyEmailPage() {

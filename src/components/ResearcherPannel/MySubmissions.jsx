@@ -2,7 +2,7 @@
 import { useState, useMemo } from 'react';
 import { useGetMeQuery, useGetMySubmissionsQuery } from '@/store/apiSlice';
 import { 
-  Loader2, FileText, ChevronRight, Clock, 
+   FileText, ChevronRight, Clock, 
   CheckCircle2, AlertCircle, FileStack, Plus,
   ChevronLeft, Search, Filter
 } from 'lucide-react';

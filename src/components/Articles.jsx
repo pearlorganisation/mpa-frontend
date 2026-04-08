@@ -6,8 +6,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Image as ImageIcon,
-  Loader2,
-  ArrowRight
+  
+  ArrowRight,
+  Loader2
 } from "lucide-react";
 import ArticleCard from "./ArticleCard";
 

@@ -2,11 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { 
-  Loader2, 
+  
   BookOpen, 
   FileText, 
   Image as ImageIcon, 
-  ArrowRight
+  ArrowRight,
+  Loader2
 } from 'lucide-react';
 import { useGetPublishedArticlesQuery } from '@/store/apiSlice';
 

@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useGetManuscriptByIdQuery } from '@/store/apiSlice';
 import { 
-  Loader2, FileText, Download, Calendar, Users, 
+   FileText, Download, Calendar, Users, 
   ChevronLeft, BookOpen, Printer, Link as LinkIcon, Check,
   Facebook, Linkedin, MessageCircle, X, Share2,
-  Building2, Mail, Tag, ShieldCheck, Info, Clock, AlertCircle
+  Building2, Mail, Tag, ShieldCheck, Info, Clock, AlertCircle,
+  Loader2
 } from 'lucide-react';
 
 // Custom X Logo

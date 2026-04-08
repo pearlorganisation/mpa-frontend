@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useRegisterMutation } from "../store/apiSlice";
-import { Loader2, User, Mail, Lock, Building, UserPlus } from "lucide-react";
+import {  User, Mail, Lock, Building, UserPlus } from "lucide-react";
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
 
