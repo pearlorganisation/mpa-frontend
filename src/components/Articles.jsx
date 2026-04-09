@@ -6,7 +6,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Image as ImageIcon,
-  
   ArrowRight,
   Loader2
 } from "lucide-react";

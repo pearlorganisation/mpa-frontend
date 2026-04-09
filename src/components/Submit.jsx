@@ -43,7 +43,7 @@ const Submit = () => {
   const [files, setFiles] = useState({
     manuscriptFile: null,
     coverLetter: null,
-    figures: null,
+    figures: [],
     tables: null,
     ethicalDeclaration: null,
     aiReport: null,
@@ -98,6 +98,22 @@ const Submit = () => {
   // ---------------------------------
 
   const handleFileChange = (e, fileType) => {
+    if (fileType === "figures") {
+      const newFiles = Array.from(e.target.files);
+      const validImages = newFiles.filter(file => file.type.startsWith("image/"));
+
+      if (validImages.length !== newFiles.length) {
+        toast.error("Only image files allowed for Figures");
+        return;
+      }
+
+      setFiles(prev => ({
+        ...prev,
+        figures: [...prev.figures, ...validImages]
+      }));
+      toast.success(`${validImages.length} figures added!`);
+      return;
+    }
     const file = e.target.files[0];
     if (!file) return;
 
@@ -130,7 +146,10 @@ const Submit = () => {
   };
 
   const removeFile = (fileType) => {
-    setFiles((prev) => ({ ...prev, [fileType]: null }));
+    setFiles((prev) => ({
+      ...prev,
+      [fileType]: fileType === "figures" ? [] : null
+    }));
   };
 
   const handleFormSubmit = async (e) => {
@@ -173,7 +192,11 @@ const Submit = () => {
 
       if (files.manuscriptFile) data.append("manuscriptFile", files.manuscriptFile);
       if (files.coverLetter) data.append("coverLetter", files.coverLetter);
-      if (files.figures) data.append("figures", files.figures);
+      if (files.figures && files.figures.length > 0) {
+        files.figures.forEach((file) => {
+          data.append("figures", file);
+        });
+      }
       if (files.tables) data.append("tables", files.tables);
       if (files.ethicalDeclaration) data.append("ethicalDeclaration", files.ethicalDeclaration);
       if (files.aiReport) data.append("aiReport", files.aiReport);
@@ -197,7 +220,7 @@ const Submit = () => {
       });
       setAuthorsList([{ name: "", email: "", affiliation: "" }]);
       setFiles({
-        manuscriptFile: null, coverLetter: null, figures: null,
+        manuscriptFile: null, coverLetter: null, figures: [],
         tables: null, ethicalDeclaration: null, aiReport: null,
         manuscriptImage: null,
       });
@@ -544,7 +567,7 @@ const Submit = () => {
                     {[
                       { id: "manuscriptFile", label: "Manuscript *", sub: "PDF, DOCX" },
                       { id: "coverLetter", label: "Cover Letter", sub: "PDF, DOCX" },
-                      { id: "figures", label: "Figures", sub: "Images/ZIP" },
+                      { id: "figures", label: "Figures", sub: "Multiple Images" }, // Updated sub text
                       { id: "tables", label: "Tables", sub: "Excel/Word" },
                       { id: "ethicalDeclaration", label: "Ethical Dec.", sub: "PDF" },
                       { id: "aiReport", label: "AI Report", sub: "PDF" },
@@ -552,40 +575,70 @@ const Submit = () => {
                       <div
                         key={item.id}
                         className={`relative border-2 border-dashed rounded-2xl p-6 transition-all flex flex-col items-center justify-center text-center
-                        ${files[item.id]
+    ${(item.id === "figures" ? files.figures.length > 0 : files[item.id])
                             ? "border-[#10B981] bg-emerald-50/60"
                             : "border-emerald-200 bg-emerald-50/20 hover:border-[#10B981] hover:bg-emerald-50/40"
                           }`}
                       >
-                        {!files[item.id] ? (
-                          <>
-                            <input
-                              type="file"
-                              className="absolute inset-0 opacity-0 cursor-pointer z-10"
-                              onChange={(e) => handleFileChange(e, item.id)}
-                              accept=".pdf,.docx,.doc"
-                            />
-                            <div className="bg-white p-3 rounded-full shadow-sm mb-3 group-hover:scale-110 transition-transform">
-                              <Upload size={20} className="text-[#10B981]" />
+                        {/* Case 1: Agar Figures upload ho chuke hain (Multiple Gallery View) */}
+                        {item.id === "figures" && files.figures.length > 0 ? (
+                          <div className="w-full relative z-20">
+                            <div className="grid grid-cols-3 gap-1.5 mb-3">
+                              {files.figures.map((file, idx) => (
+                                <div key={idx} className="relative aspect-square border border-emerald-200 rounded-lg overflow-hidden bg-white shadow-sm">
+                                  <img src={URL.createObjectURL(file)} className="w-full h-full object-cover" alt="fig" />
+                                </div>
+                              ))}
                             </div>
-                            <p className="text-[#713F12] text-sm font-semibold">{item.label}</p>
-                            <p className="text-[10px] text-[#854D0E] uppercase tracking-wider mt-1">{item.sub}</p>
-                          </>
-                        ) : (
-                          <div className="flex flex-col items-center w-full relative z-20">
-                            <FileCheck className="text-[#10B981] mb-2" size={24} />
-                            <p className="text-[#713F12] text-xs font-semibold truncate w-full px-2" title={files[item.id].name}>
-                              {files[item.id].name}
-                            </p>
-                            <button
-                              type="button"
-                              onClick={() => removeFile(item.id)}
-                              className="mt-3 px-4 py-1.5 bg-white border border-red-200 text-xs text-red-500 font-medium rounded-lg hover:bg-red-50 hover:text-red-600 hover:border-red-300 transition-all flex items-center gap-1.5 shadow-sm"
-                            >
-                              <X size={14} /> Remove
-                            </button>
+                            <p className="text-[#713F12] text-[10px] font-bold mb-2 uppercase">{files.figures.length} Figures Attached</p>
+                            <div className="flex gap-2 justify-center">
+                              <label className="cursor-pointer bg-white border border-emerald-200 text-[10px] font-bold text-emerald-600 px-2 py-1 rounded hover:bg-emerald-50 transition-all">
+                                + Add More
+                                <input type="file" multiple accept="image/*" className="hidden" onChange={(e) => handleFileChange(e, "figures")} />
+                              </label>
+                              <button
+                                type="button"
+                                onClick={() => removeFile("figures")}
+                                className="bg-white border border-red-100 text-[10px] font-bold text-red-500 px-2 py-1 rounded hover:bg-red-50 transition-all"
+                              >
+                                Clear
+                              </button>
+                            </div>
                           </div>
-                        )}
+                        ) :
+                          /* Case 2: Agar single file upload ho chuki hai (Normal View) */
+                          (item.id !== "figures" && files[item.id]) ? (
+                            <div className="flex flex-col items-center w-full relative z-20">
+                              <FileCheck className="text-[#10B981] mb-2" size={24} />
+                              <p className="text-[#713F12] text-xs font-semibold truncate w-full px-2">
+                                {files[item.id].name}
+                              </p>
+                              <button
+                                type="button"
+                                onClick={() => removeFile(item.id)}
+                                className="mt-3 px-4 py-1.5 bg-white border border-red-200 text-xs text-red-500 font-medium rounded-lg hover:bg-red-50 transition-all shadow-sm"
+                              >
+                                <X size={14} className="inline mr-1" /> Remove
+                              </button>
+                            </div>
+                          ) :
+                            /* Case 3: Empty state (Upload prompt) */
+                            (
+                              <>
+                                <input
+                                  type="file"
+                                  multiple={item.id === "figures"} // Ye important hai
+                                  className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                                  onChange={(e) => handleFileChange(e, item.id)}
+                                  accept={item.id === "figures" ? "image/*" : ".pdf,.docx,.doc"}
+                                />
+                                <div className="bg-white p-3 rounded-full shadow-sm mb-3">
+                                  <Upload size={20} className="text-[#10B981]" />
+                                </div>
+                                <p className="text-[#713F12] text-sm font-semibold">{item.label}</p>
+                                <p className="text-[10px] text-[#854D0E] uppercase tracking-wider mt-1">{item.sub}</p>
+                              </>
+                            )}
                       </div>
                     ))}
                   </div>
