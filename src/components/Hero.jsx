@@ -92,7 +92,9 @@ const Hero = () => {
             </button>
 
             <button
-              onClick={() => scrollToSection("articles")}
+              onClick={() =>{
+                router.push("/menuscript-search")
+              }}
               className="bg-white text-[#713F12] px-8 py-4 rounded-2xl font-bold border border-green-100 hover:bg-green-50 transition-all shadow-sm hover:shadow-md"
             >
               Browse Articles

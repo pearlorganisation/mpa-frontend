@@ -73,8 +73,8 @@ export default function SearchPublishedPage() {
           <div className="flex justify-center gap-3">
             {[
               { id: "all", label: "All Papers", icon: null },
-              { id: "original", label: "Original Research", icon: FileText },
-              { id: "review", label: "Review Articles", icon: BookOpen },
+              // { id: "original", label: "Original Research", icon: FileText },
+              // { id: "review", label: "Review Articles", icon: BookOpen },
             ].map((tab) => (
               <button
                 key={tab.id}
