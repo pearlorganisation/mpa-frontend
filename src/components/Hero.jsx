@@ -85,7 +85,7 @@ const Hero = () => {
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-4 mb-12">
             <button
-              onClick={() => checkAuthAndRun(() => router.push("/dashboard/submit-manuscript"))}
+              onClick={() => checkAuthAndRun(() => router.push("/menuscript-search"))}
               className="bg-[#22C55E] text-white px-4 py-2 rounded-2xl font-bold flex items-center gap-2 hover:bg-[#16a34a] transition-all transform hover:-translate-y-1 shadow-lg hover:shadow-[#22C55E]/20"
             >
               Submit Manuscript <ArrowRight size={20} />
