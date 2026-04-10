@@ -2,10 +2,11 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Search, ArrowRight, FileText, BookOpen, Clock, Loader2
- } from "lucide-react";
+import {
+  Search, ArrowRight, FileText, BookOpen, Clock, Loader2
+} from "lucide-react";
 // Import your hook from wherever your apiSlice file is located
-import { useGetPublishedArticlesQuery } from "@/redux/api/apiSlice"; 
+import { useGetPublishedArticlesQuery } from "@/redux/api/apiSlice";
 
 export default function SearchPublishedPage() {
   const [query, setQuery] = useState("");
@@ -13,21 +14,21 @@ export default function SearchPublishedPage() {
 
   // 1. Fetch data using your RTK Query hook
   const { data, isLoading, isError, error } = useGetPublishedArticlesQuery();
-  
+
   const articles = data?.articles || [];
 
   // 2. Filter logic: Search + Manuscript Type
   const filteredResults = useMemo(() => {
     return articles.filter((item) => {
       // Search matches title or authors (if available)
-      const matchesSearch = item.title.toLowerCase().includes(query.toLowerCase()) || 
-                            item.abstract?.toLowerCase().includes(query.toLowerCase());
+      const matchesSearch = item.title.toLowerCase().includes(query.toLowerCase()) ||
+        item.abstract?.toLowerCase().includes(query.toLowerCase());
 
       // Filter matches manuscript type
       // Note: Adjust "original" and "review" strings based on your actual database values
-      const matchesType = 
-        filterType === "all" || 
-        (filterType === "original" && item.manuscriptType?.toLowerCase().includes("research")) || 
+      const matchesType =
+        filterType === "all" ||
+        (filterType === "original" && item.manuscriptType?.toLowerCase().includes("research")) ||
         (filterType === "review" && item.manuscriptType?.toLowerCase().includes("review"));
 
       return matchesSearch && matchesType;
@@ -53,11 +54,11 @@ export default function SearchPublishedPage() {
   return (
     <div className="min-h-screen bg-[#FDFBF7]/50 pt-32 pb-20 px-6">
       <div className="max-w-6xl mx-auto">
-        
+
         {/* --- SEARCH & HEADER --- */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-black text-[#5D3A1A] mb-6 tracking-tight">Published Archives</h1>
-          
+
           <div className="relative max-w-2xl mx-auto mb-8">
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
@@ -79,11 +80,10 @@ export default function SearchPublishedPage() {
               <button
                 key={tab.id}
                 onClick={() => setFilterType(tab.id)}
-                className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-widest transition-all ${
-                  filterType === tab.id
+                className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-widest transition-all ${filterType === tab.id
                     ? "bg-emerald-600 text-white shadow-lg shadow-emerald-200"
                     : "bg-white text-gray-400 border border-gray-100 hover:bg-emerald-50"
-                }`}
+                  }`}
               >
                 {tab.icon && <tab.icon size={14} />}
                 {tab.label}
@@ -96,8 +96,8 @@ export default function SearchPublishedPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {filteredResults.length > 0 ? (
             filteredResults.map((article) => (
-              <div 
-                key={article._id} 
+              <div
+                key={article._id}
                 className="group bg-white p-8 rounded-[32px] border border-gray-100 hover:border-emerald-500 hover:shadow-2xl transition-all duration-500 flex flex-col h-full"
               >
                 <div className="flex justify-between items-start mb-4">
@@ -122,9 +122,9 @@ export default function SearchPublishedPage() {
 
                 <div className="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between">
                   <div className="text-[10px] text-[#C2783E] font-bold uppercase tracking-widest">
-                    Journal of Applied Bio.
+                    {article.authors?.[0]?.name || "Unknown Author"}
                   </div>
-                  <Link 
+                  <Link
                     href={`/published-article/${article._id}`}
                     className="flex items-center gap-2 text-emerald-600 text-xs font-black uppercase tracking-tighter hover:gap-4 transition-all"
                   >
@@ -135,8 +135,8 @@ export default function SearchPublishedPage() {
             ))
           ) : (
             <div className="col-span-full py-20 text-center">
-               <h3 className="text-xl font-medium text-gray-400 italic">No matching articles found in the archives.</h3>
-               <button onClick={() => {setQuery(""); setFilterType("all");}} className="mt-4 text-emerald-600 font-bold underline">Reset all filters</button>
+              <h3 className="text-xl font-medium text-gray-400 italic">No matching articles found in the archives.</h3>
+              <button onClick={() => { setQuery(""); setFilterType("all"); }} className="mt-4 text-emerald-600 font-bold underline">Reset all filters</button>
             </div>
           )}
         </div>

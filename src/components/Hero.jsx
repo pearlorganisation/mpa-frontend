@@ -10,7 +10,7 @@ import {
   Calendar,
   ExternalLink,
   Loader2,
-  
+
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useGetLatestPublishedQuery } from "../store/apiSlice";
@@ -85,14 +85,21 @@ const Hero = () => {
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-4 mb-12">
             <button
-              onClick={() => checkAuthAndRun(() => router.push("/menuscript-search"))}
+              onClick={() =>
+                checkAuthAndRun(() => {
+                  const section = document.getElementById("submit");
+                  if (section) {
+                    section.scrollIntoView({ behavior: "smooth" });
+                  }
+                })
+              }
               className="bg-[#22C55E] text-white px-4 py-2 rounded-2xl font-bold flex items-center gap-2 hover:bg-[#16a34a] transition-all transform hover:-translate-y-1 shadow-lg hover:shadow-[#22C55E]/20"
             >
               Submit Manuscript <ArrowRight size={20} />
             </button>
 
             <button
-              onClick={() =>{
+              onClick={() => {
                 router.push("/menuscript-search")
               }}
               className="bg-white text-[#713F12] px-8 py-4 rounded-2xl font-bold border border-green-100 hover:bg-green-50 transition-all shadow-sm hover:shadow-md"
