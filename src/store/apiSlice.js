@@ -91,7 +91,7 @@ export const apiSlice = createApi({
     getPublishedArticles: builder.query({
       query: ({ year, page = 1, limit = 6 } = {}) => {
         const params = new URLSearchParams({
-          ...(year && year !== "undefined" && { year }), 
+          ...(year && year !== "undefined" && { year }),
           page,
           limit,
         }).toString();
@@ -125,6 +125,9 @@ export const apiSlice = createApi({
     getLatestPublished: builder.query({
       query: () => "/manuscripts/latest",
     }),
+    getManuscriptDetails: builder.query({
+      query: (id) => `/manuscripts/${id}`,
+    }),
   }),
 });
 
@@ -143,6 +146,7 @@ export const {
   useSendEnquiryMutation,
   useGetLatestPublishedArticleQuery,
   useGetPublishedYearsQuery,
-  useGetLatestPublishedQuery
+  useGetLatestPublishedQuery,
+  useGetManuscriptDetailsQuery ,
 
 } = apiSlice;

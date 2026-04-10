@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import { 
-  Share2, Download, Quote, Printer, Copy, ChevronLeft, 
-  FileText, BarChart3, ShieldCheck, Mail, Check, ExternalLink 
+import {
+  Share2, Download, Quote, Printer, Copy, ChevronLeft,
+  FileText, BarChart3, ShieldCheck, Mail, Check, ExternalLink
 } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -67,16 +67,16 @@ export default function ArticleToolsDropdown({ article }) {
 
   const handleDownloadPDF = () => {
     if (article?.files?.manuscriptFile) {
-        window.open(article.files.manuscriptFile, "_blank");
+      window.open(article.files.manuscriptFile, "_blank");
     } else {
-        toast.error("PDF file not available at the moment.");
+      toast.error("PDF file not available at the moment.");
     }
   };
 
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
       <Toaster position="top-right" />
-      
+
       {/* Main Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
@@ -89,7 +89,7 @@ export default function ArticleToolsDropdown({ article }) {
 
       {isOpen && (
         <div className="absolute right-0 mt-3 w-72 bg-white rounded-xl shadow-2xl border border-gray-200 z-[100] overflow-hidden animate-in fade-in zoom-in duration-200">
-          
+
           {/* VIEW: MAIN MENU */}
           {activeView === "main" && (
             <div className="py-2">
@@ -99,9 +99,9 @@ export default function ArticleToolsDropdown({ article }) {
               <ToolButton icon={<Download size={16} />} label="Download PDF" onClick={handleDownloadPDF} />
               <ToolButton icon={<Quote size={16} />} label="Cite this Article" onClick={() => setActiveView("cite")} />
               <ToolButton icon={<BarChart3 size={16} />} label="Article Metrics" onClick={() => setActiveView("metrics")} />
-              
+
               <div className="h-px bg-gray-100 my-2"></div>
-              
+
               <div className="px-4 py-2">
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Share & Export</span>
               </div>
