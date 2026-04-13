@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import ReduxProvider from "@/components/Layout/ReduxProvider"; 
+import ReduxProvider from "@/components/Layout/ReduxProvider";
 import CookieConsent from "@/components/Layout/CookieConsent";
 import LayoutWrapper from "@/components/Layout/LayoutWrapper";
 
@@ -18,6 +18,10 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "MPA Research - Publish Your Manuscript",
   description: "Join thousands of researchers publishing their work with MPA Research.",
+  icons: {
+    icon: "/favicon.png",
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -27,12 +31,12 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ReduxProvider>
-         
-            <LayoutWrapper>
-          {children}
+
+          <LayoutWrapper>
+            {children}
           </LayoutWrapper>
-         
-          <CookieConsent/>
+
+          <CookieConsent />
         </ReduxProvider>
       </body>
     </html>
