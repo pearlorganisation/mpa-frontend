@@ -18,70 +18,15 @@ import {
   ShieldCheck,
   Search,
 } from "lucide-react";
-import { useSubmitManuscriptMutation, useGetManuscriptDetailsQuery } from "../store/apiSlice";
+import { useSubmitManuscriptMutation } from "../store/apiSlice";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 
-// --- Plagiarism Tracker Component (Live Polling) ---
-const PlagiarismTracker = ({ manuscriptId, onReset }) => {
-  const { data } = useGetManuscriptDetailsQuery(manuscriptId, {
-    pollingInterval: 5000, // Har 5 second mein update check karega
-  });
-
-  const manuscript = data?.manuscript;
-
-  return (
-    <div className="py-8 text-center animate-in fade-in zoom-in duration-300">
-      <div className="bg-emerald-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-100">
-        <CheckCircle size={40} className="text-[#10B981]" />
-      </div>
-      <h2 className="text-3xl font-bold text-[#713F12] mb-2">Submission Successful!</h2>
-      <p className="text-[#854D0E]/70 mb-8 max-w-sm mx-auto">
-        Your manuscript has been received and is currently undergoing security scans.
-      </p>
-
-      <div className="max-w-md mx-auto p-6 bg-[#F8FAFC] rounded-[2rem] border-2 border-dashed border-emerald-200">
-        <h4 className="text-xs font-black text-emerald-800 mb-4 uppercase tracking-widest">
-          Plagiarism Integrity Scan
-        </h4>
-
-        {manuscript?.plagiarismStatus === "pending" ? (
-          <div className="flex flex-col items-center gap-3">
-            <Loader2 className="animate-spin text-[#10B981]" size={32} />
-            <p className="text-[#713F12] font-bold">Scanning Document...</p>
-            <p className="text-[10px] text-[#854D0E] uppercase tracking-tighter">Please wait, this usually takes 1 minute</p>
-          </div>
-        ) : (
-          <div className="flex flex-col items-center gap-2">
-            <div className={`text-5xl font-black ${manuscript?.plagiarismScore > 20 ? 'text-red-500' : 'text-[#10B981]'}`}>
-              {manuscript?.plagiarismScore}%
-            </div>
-            <div className="flex items-center gap-2 font-bold text-[#713F12] mt-2">
-              <ShieldCheck size={20} className="text-[#10B981]" />
-              Scan Completed
-            </div>
-            <p className="text-xs text-[#854D0E] mt-1 italic">
-              Results have been shared with the editorial board.
-            </p>
-          </div>
-        )}
-      </div>
-
-      <button
-        onClick={onReset}
-        className="mt-10 text-[#10B981] font-bold hover:underline flex items-center gap-2 mx-auto"
-      >
-        <Plus size={18} /> Submit Another Manuscript
-      </button>
-    </div>
-  );
-};
 
 const Submit = () => {
   const router = useRouter();
   const fileInputRef = useRef(null);
   const [submitManuscript, { isLoading }] = useSubmitManuscriptMutation();
-  const [submittedId, setSubmittedId] = useState(null);
 
   // Basic Form States
   const [formData, setFormData] = useState({
@@ -109,6 +54,7 @@ const Submit = () => {
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
@@ -221,11 +167,7 @@ const Submit = () => {
       const res = await submitManuscript(data).unwrap();
 
       toast.success("Submitted successfully!", { id: submissionToast });
-
-      // Set ID for Plagiarism Polling
-      if (res.manuscript && res.manuscript._id) {
-        setSubmittedId(res.manuscript._id);
-      }
+      setIsSubmitted(true);
 
       // Clear Form
       setFormData({ title: "", discipline: "", abstract: "", keywords: "", manuscriptType: "" });
@@ -236,7 +178,7 @@ const Submit = () => {
     }
   };
 
-  const resetForm = () => setSubmittedId(null);
+  const resetForm = () => setIsSubmitted(false);
 
   const steps = [
     { icon: <Upload size={24} />, title: "Submit Manuscript", desc: "Upload your research paper in PDF or Word format." },
@@ -276,8 +218,22 @@ const Submit = () => {
 
         <div className="grid lg:grid-cols-12 gap-10 items-start relative">
           <div className="lg:col-span-7 bg-white p-6 md:p-10 rounded-[2.5rem] shadow-xl shadow-emerald-900/5 border border-white min-h-[600px]">
-            {submittedId ? (
-              <PlagiarismTracker manuscriptId={submittedId} onReset={resetForm} />
+            {isSubmitted ? (
+              <div className="text-center py-10">
+                <h2 className="text-3xl font-bold text-green-600">
+                  Submission Successful 
+                </h2>
+                <p className="text-gray-600 mt-2">
+                  Your manuscript has been submitted successfully.
+                </p>
+
+                <button
+                  onClick={resetForm}
+                  className="mt-6 px-5 py-2 bg-green-500 text-white rounded-lg"
+                >
+                  Submit Another
+                </button>
+              </div>
             ) : (
               <>
                 <h2 className="text-3xl font-bold text-[#713F12] mb-8 flex items-center gap-3">
