@@ -85,9 +85,6 @@ const Contact = () => {
             <p className="text-amber-900 font-medium">
               info@mparesearch.org
             </p>
-            <p className="text-amber-900 font-medium mb-3">
-              submissions@mparesearch.org
-            </p>
             <p className="text-sm text-amber-600">
               General inquiries and submission support
             </p>
