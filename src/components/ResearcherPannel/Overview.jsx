@@ -1,16 +1,16 @@
 "use client";
 import React from 'react';
 import NextLink from 'next/link'; // Renamed to avoid conflict with Lucide Link icon
-import { 
-  User as UserIcon, 
-  Mail, 
-  MapPin, 
-  BookOpen, 
-  Award, 
-  BarChart3, 
+import {
+  User as UserIcon,
+  Mail,
+  MapPin,
+  BookOpen,
+  Award,
+  BarChart3,
   ExternalLink,
   FileText,
-  
+
   Link as LinkIcon,
   Loader2
 } from 'lucide-react';
@@ -55,7 +55,7 @@ const Overview = () => {
   return (
     <div className="min-h-screen bg-[#FDFBF7] p-4 sm:p-6 md:p-8 lg:p-10">
       <div className="max-w-6xl mx-auto">
-        
+
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
           <div>
@@ -68,17 +68,13 @@ const Overview = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-          
+
           {/* Left Column: Personal Info Card */}
           <div className="lg:col-span-4 space-y-6">
             <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-orange-50 flex flex-col items-center text-center">
               <div className="relative mb-6">
                 <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-[#FDFBF2] shadow-xl overflow-hidden bg-emerald-50 flex items-center justify-center">
-                  <img 
-                    src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`} 
-                    alt="Profile" 
-                    className="w-full h-full object-cover"
-                  />
+                  <UserIcon size={40} className="text-[#10B981]" />
                 </div>
                 {user.isVerified && (
                   <div className="absolute bottom-1 right-1 bg-[#10B981] p-1.5 sm:p-2 rounded-full text-white border-4 border-white shadow-sm">
@@ -86,24 +82,17 @@ const Overview = () => {
                   </div>
                 )}
               </div>
-              
+
               <h2 className="text-xl sm:text-2xl font-bold text-[#5D3A1A] break-words w-full px-2">{user.name}</h2>
               <p className="text-[#10B981] font-semibold text-xs sm:text-sm mb-4 capitalize bg-emerald-50 px-3 py-1 rounded-full mt-2">
                 {user.role} Researcher
               </p>
-              
+
               <div className="w-full space-y-4 mt-4 text-left border-t border-gray-50 pt-6">
-                <div className="flex items-start gap-3 text-gray-600 text-sm">
-                  <MapPin size={18} className="text-[#5D3A1A]/40 mt-0.5 shrink-0" />
-                  <span className="leading-tight">{user.affiliation || "Independent Researcher"}</span>
-                </div>
+
                 <div className="flex items-center gap-3 text-gray-600 text-sm">
                   <Mail size={18} className="text-[#5D3A1A]/40 shrink-0" />
                   <span className="truncate">{user.email}</span>
-                </div>
-                <div className="flex items-center gap-3 text-gray-600 text-sm">
-                  <LinkIcon size={18} className="text-[#5D3A1A]/40 shrink-0" />
-                  <span className="text-blue-500 truncate cursor-pointer hover:underline">scholar.profile/id</span>
                 </div>
               </div>
             </div>
@@ -124,7 +113,7 @@ const Overview = () => {
 
           {/* Right Column: Content */}
           <div className="lg:col-span-8 space-y-6">
-            
+
             {/* Stats Grid - Responsive columns */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
               {stats.map((stat, idx) => (
@@ -161,7 +150,7 @@ const Overview = () => {
                   All Submissions <ExternalLink size={14} />
                 </NextLink>
               </div>
-              
+
               <div className="space-y-4">
                 {isSubLoading ? (
                   <div className="flex flex-col items-center py-10 gap-2">
@@ -181,11 +170,10 @@ const Overview = () => {
                           </p>
                         </div>
                         <div className="flex items-center gap-2 self-start sm:self-center">
-                          <span className={`text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter ${
-                            manuscript.status === 'published' 
-                              ? 'bg-emerald-100 text-emerald-700' 
+                          <span className={`text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter ${manuscript.status === 'published'
+                              ? 'bg-emerald-100 text-emerald-700'
                               : 'bg-orange-100 text-orange-700'
-                          }`}>
+                            }`}>
                             {manuscript.status || 'Under Review'}
                           </span>
                         </div>

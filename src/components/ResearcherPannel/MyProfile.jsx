@@ -7,7 +7,7 @@ import {
   
   CheckCircle,
   X,
-  Building2, // Added for affiliation icon
+  Building2, 
   Loader2
 } from 'lucide-react';
 import { 
