@@ -8,19 +8,21 @@ import Guidelines from "@/components/Guidelines";
 import Contact from "@/components/Contact";
 import AiPolicySection from "@/components/AiPolicySection";
 import PublishedArticles from "@/components/PublishedArticle";
-import {Issue} from "@/components/Issue";
+import { Issue } from "@/components/Issue";
+import { AnnouncementBanner } from "@/utils/AnnouncementSystem";
 const Page = () => {
   return (
     <div>
+      <AnnouncementBanner />
       <Hero />
+
       <About />
-      {/* <PublishedArticles /> */}
       <Articles />
       <Submit />
-      <Issue/>
+      <Issue />
       <EditorialBoard />
       <Guidelines />
-      <AiPolicySection/>
+      <AiPolicySection />
       <Contact />
     </div>
   );
