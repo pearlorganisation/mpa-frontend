@@ -95,7 +95,7 @@ const Submit = () => {
       setAuthorsList(updatedAuthors);
     }
   };
-
+  //Chnages
   const handleFileChange = (e, fileType) => {
     if (fileType === "figures") {
       const newFiles = Array.from(e.target.files);
