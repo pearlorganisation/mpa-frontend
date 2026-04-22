@@ -1,34 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  User as UserIcon, 
-  Mail, 
+import {
+  User as UserIcon,
+  Mail,
   Calendar,
   Edit3,
-  
+
   CheckCircle,
   X,
-  Building2, 
+  Building2,
   Loader2
 } from 'lucide-react';
-import { 
-  useGetMeQuery, 
+import {
+  useGetMeQuery,
   useGetMySubmissionsQuery,
   useUpdateProfileMutation // 1. Import the mutation
 } from '@/store/apiSlice';
 
 const MyProfile = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  
+
   // 2. Local state for form fields
-  const [formData, setFormData] = useState({ 
-    name: '', 
-    affiliation: '' 
+  const [formData, setFormData] = useState({
+    name: '',
+    affiliation: ''
   });
 
   // 3. Fetch Data
   const { data: userData, isLoading: isUserLoading, error: userError } = useGetMeQuery();
   const { data: subData } = useGetMySubmissionsQuery();
-  
+
   // 4. Mutation Hook
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
 
@@ -36,9 +36,9 @@ const MyProfile = () => {
 
   // 5. Initialize form data when user data is loaded or modal opens
   const handleEditClick = () => {
-    setFormData({ 
-      name: user?.name || '', 
-      affiliation: user?.affiliation || '' 
+    setFormData({
+      name: user?.name || '',
+      affiliation: user?.affiliation || ''
     });
     setIsEditModalOpen(true);
   };
@@ -81,14 +81,14 @@ const MyProfile = () => {
   return (
     <div className="min-h-screen bg-[#FDFBF7] p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
-        
+
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-bold text-[#5D3A1A]">My Profile</h1>
             <p className="text-gray-500 text-lg">Welcome back, {user.name}.</p>
           </div>
-          <button 
+          <button
             onClick={handleEditClick}
             className="flex items-center gap-2 bg-[#10B981] text-white px-6 py-2.5 rounded-xl font-semibold shadow-lg shadow-emerald-100 hover:bg-emerald-600 transition-all active:scale-95"
           >
@@ -98,7 +98,7 @@ const MyProfile = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
+
           {/* Left Column: Personal Info Card */}
           <div className="space-y-6">
             <div className="bg-white rounded-3xl p-6 border border-emerald-50 shadow-sm">
@@ -111,7 +111,7 @@ const MyProfile = () => {
                   {user.isVerified && <CheckCircle size={18} className="text-blue-500" fill="currentColor" />}
                 </div>
                 <p className="text-emerald-600 font-medium capitalize mb-4">{user.role}</p>
-                
+
                 <div className="w-full space-y-3 pt-4 border-t border-gray-50">
                   <div className="flex items-center gap-3 text-gray-600">
                     <Mail size={18} className="text-gray-400" />
@@ -146,7 +146,7 @@ const MyProfile = () => {
 
           {/* Right Column: Can include Submissions List here */}
           <div className="lg:col-span-2 space-y-6">
-             {/* Add your Submissions list component here */}
+            {/* Add your Submissions list component here */}
           </div>
         </div>
       </div>
@@ -164,11 +164,11 @@ const MyProfile = () => {
             <form onSubmit={handleUpdate} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">Full Name</label>
-                <input 
+                <input
                   type="text"
                   required
                   value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#10B981] focus:ring-2 focus:ring-emerald-50 outline-none transition-all"
                   placeholder="Enter your name"
                 />
@@ -176,10 +176,10 @@ const MyProfile = () => {
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">Affiliation</label>
-                <input 
+                <input
                   type="text"
                   value={formData.affiliation}
-                  onChange={(e) => setFormData({...formData, affiliation: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, affiliation: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#10B981] focus:ring-2 focus:ring-emerald-50 outline-none transition-all"
                   placeholder="University or Institution"
                 />
@@ -187,16 +187,16 @@ const MyProfile = () => {
 
               <div>
                 <label className="block text-sm font-semibold text-gray-400 mb-1.5">Email Address (Cannot be changed)</label>
-                <input 
-                  type="email" 
-                  disabled 
+                <input
+                  type="email"
+                  disabled
                   value={user.email}
                   className="w-full px-4 py-2.5 rounded-xl border border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed"
                 />
               </div>
 
               <div className="flex gap-3 pt-4">
-                <button 
+                <button
                   type="button"
                   disabled={isUpdating}
                   onClick={() => setIsEditModalOpen(false)}
@@ -204,7 +204,7 @@ const MyProfile = () => {
                 >
                   Cancel
                 </button>
-                <button 
+                <button
                   type="submit"
                   disabled={isUpdating}
                   className="flex-1 px-6 py-2.5 rounded-xl font-semibold bg-[#10B981] text-white hover:bg-emerald-600 shadow-lg shadow-emerald-100 transition-all flex items-center justify-center gap-2 disabled:opacity-70"

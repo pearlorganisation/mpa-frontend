@@ -57,7 +57,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="w-full bg-[#FDF6ED] overflow-hidden" id="hero">
+    <section className="w-full bg-[#FDF6ED] overflow-hidden scroll-mt-35" id="hero">
       {/* Container with responsive padding for mobile, tablet, and desktop */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16 lg:py-20">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">

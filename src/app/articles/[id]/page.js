@@ -84,7 +84,7 @@ export default function ArticleDetail() {
             <div className="flex items-center gap-2"><Hash size={16} className="text-green-600"/> DOI: <span className="text-[#713F12]">{article.paperNumber}</span></div>
           </div>
           <div className="flex items-center gap-4">
-             <a href={article.files?.manuscriptFile} target="_blank" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold transition-all shadow-lg active:scale-95">
+             <a href={article.files?.manuscriptFile?.url} target="_blank" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl flex items-center gap-2 text-sm font-bold transition-all shadow-lg active:scale-95">
                <Download size={18} /> PDF Full Text
              </a>
              <ArticleToolsDropdown article={article} />
@@ -143,7 +143,7 @@ export default function ArticleDetail() {
                                 <div key={idx} className="group bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500">
                                     <div className="aspect-[4/3] bg-gray-50 relative overflow-hidden flex items-center justify-center p-6 cursor-zoom-in" onClick={() => window.open(fig, '_blank')}>
                                         <img 
-                                          src={fig} 
+                                          src={fig?.url} 
                                           alt={`Figure ${idx + 1}`} 
                                           className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-700" 
                                         />
@@ -158,7 +158,7 @@ export default function ArticleDetail() {
                                             <span className="text-[10px] font-black text-green-600 uppercase tracking-[0.2em]">Figure {idx + 1}</span>
                                             <p className="text-sm font-bold text-slate-800">Manuscript Illustration</p>
                                         </div>
-                                        <a href={fig} download className="p-3 bg-green-50 text-green-600 rounded-2xl hover:bg-green-600 hover:text-white transition-all">
+                                        <a target="_blank" href={fig?.url} download className="target p-3 bg-green-50 text-green-600 rounded-2xl hover:bg-green-600 hover:text-white transition-all">
                                             <Download size={20}/>
                                         </a>
                                     </div>

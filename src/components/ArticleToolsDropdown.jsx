@@ -2,7 +2,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
   Share2, Download, Quote, Printer, Copy, ChevronLeft,
-  FileText, BarChart3, ShieldCheck, Mail, Check, ExternalLink
+  FileText, BarChart3, ShieldCheck, Mail, Check, ExternalLink,
+  Facebook, Twitter, Linkedin, MessageCircle
 } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -67,7 +68,7 @@ export default function ArticleToolsDropdown({ article }) {
 
   const handleDownloadPDF = () => {
     if (article?.files?.manuscriptFile) {
-      window.open(article.files.manuscriptFile, "_blank");
+      window.open(article.files.manuscriptFile?.url, "_blank");
     } else {
       toast.error("PDF file not available at the moment.");
     }
@@ -135,10 +136,33 @@ export default function ArticleToolsDropdown({ article }) {
             <div className="p-4">
               <Header title="Share Research" onBack={() => setActiveView("main")} />
               <div className="grid grid-cols-4 gap-3 mt-4 mb-4">
-                <SocialIcon color="bg-[#25D366]" icon={<Share2 size={18} />} label="WA" onClick={() => shareTo("whatsapp")} />
-                <SocialIcon color="bg-[#1877F2]" icon={<Share2 size={18} />} label="FB" onClick={() => shareTo("facebook")} />
-                <SocialIcon color="bg-[#1DA1F2]" icon={<Share2 size={18} />} label="X" onClick={() => shareTo("twitter")} />
-                <SocialIcon color="bg-[#0A66C2]" icon={<Share2 size={18} />} label="LN" onClick={() => shareTo("linkedin")} />
+                <SocialIcon
+                  color="bg-[#25D366]"
+                  icon={<MessageCircle size={18} />}
+                  label="WhatsApp"
+                  onClick={() => shareTo("whatsapp")}
+                />
+
+                <SocialIcon
+                  color="bg-[#1877F2]"
+                  icon={<Facebook size={18} />}
+                  label="Facebook"
+                  onClick={() => shareTo("facebook")}
+                />
+
+                <SocialIcon
+                  color="bg-[#1DA1F2]"
+                  icon={<Twitter size={18} />}
+                  label="Twitter"
+                  onClick={() => shareTo("twitter")}
+                />
+
+                <SocialIcon
+                  color="bg-[#0A66C2]"
+                  icon={<Linkedin size={18} />}
+                  label="LinkedIn"
+                  onClick={() => shareTo("linkedin")}
+                />
               </div>
               <button
                 onClick={() => {

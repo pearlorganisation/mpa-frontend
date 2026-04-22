@@ -15,7 +15,6 @@ const Page = () => {
     <div>
       <AnnouncementBanner />
       <Hero />
-
       <About />
       <Articles />
       <Submit />
