@@ -112,7 +112,11 @@ const Submit = () => {
     if (!file) return;
 
     const isImage = file.type.startsWith("image/");
-    const isDoc = file.type === "application/pdf" || file.type === "application/msword" || file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    const isDoc =
+      file.type === "application/pdf" ||
+      file.type === "application/msword" ||
+      file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+      file.type === "application/zip";
 
     if (fileType === "manuscriptImage" || fileType === "figures") {
       if (!isImage) { toast.error("Only image files allowed (JPG, PNG, WEBP)"); return; }
